@@ -9,3 +9,4 @@ data_dir = "cifar10"
 classes = os.listdir(data_dir + "/train")
 
 
+alskdjflsdkjfd
