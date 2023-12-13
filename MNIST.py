@@ -38,6 +38,34 @@ def forward(self, x):
 
 	return F.log_softmax(x, dim=1)
 
+# model, device (GPU, CPU), training data set, initialised object representing optimizer,
+# epoch (entire data set gone over in one epoch)
+def train(model, device, train_loader, optimizer, epoch):
+	# Set to training mode (parameters can be changed)
+	model.train()
+	# Go over training data set
+	# Get input and output (x and y)
+	# Batch index for printing loss etc.
+	for batch_idx, (data, target) in enumerate(train_loader):
+		# Move data in target to device
+		data, target = data.to(device), target.to(device)
+		# Reset computed gradients to 0
+		optimizer.zero_grad()
+		# Run data through forward pass of network (get output in current step)
+		output = mode(data)
+		# Calculates loss at current step
+		loss = F.nll_loss(output, target)
+		# Back propagation (how much each parameter contributed to loss)
+		loss.backward()
+		# Changes parameters depending on computed loss
+		optimizer.step()
+		# Prints every 100th batch
+		if batch_idx % 100 == 0:
+			print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
+				epoch, batch_idx * len(data), len(train_loader.dataset),
+				100. * batch_idx / len(train_loader), loss.item()))
+
+
 # Loads testing data set
 def test(model, device, test_loader):
 	# Set model to evaluation mode (won't change parameters)
