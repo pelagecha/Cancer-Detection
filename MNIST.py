@@ -68,6 +68,25 @@ def test(model, device, test_loader):
 		test_loss, correct, len(test_loader.dataset),
 		100 * correct / len(test_loader_dataset)))
 
+# Shuffles data, splits into batches
+train_loader = torch.utils.data.DataLoader(
+	# fetches training data
+	datasets.MNIST('../data', train=True, download=True,
+		transform=transforms.Compose([
+			transforms.ToTensor(),
+			transforms.Normalize((0, 1307), (0.3081,))
+		])),
+	batch_size=128, shuffle=True)
+
+# Fetches testing data
+test_loader = torch.utils.data.DataLoader(
+	datasets.MNIST('../data', train=False, transform=transforms.Compose([
+			transforms.ToTensor(),
+			transforms.Normalize((0.1307,), (0.3081,))
+		])),
+	batch_size=1000, shuffle=True)
+
+
 # See if cuda available or GPU
 use_cuda = torch.cuda.is_available()
 
