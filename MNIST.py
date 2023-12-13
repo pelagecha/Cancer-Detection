@@ -47,7 +47,7 @@ def test(model, device, test_loader):
 	# Test loss
 	test_loss = 0
 	# Speeds up progress as calculates no gradients
-	with torch.no_grad();
+	with torch.no_grad():
 		# iterates through test dat
 		for data, target in test_loader:
 			# Move data to device
@@ -66,7 +66,7 @@ def test(model, device, test_loader):
 	
 	print('\nTest set: Average loss: {: 4f}, Accuracy: {}/{} ({:.0f}\n'.format(
 		test_loss, correct, len(test_loader.dataset),
-		100 * correct / len(test_loader_dataset)))
+		100 * correct / len(test_loader)))
 
 # Shuffles data, splits into batches
 train_loader = torch.utils.data.DataLoader(
