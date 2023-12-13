@@ -7,9 +7,9 @@ import torch.nn.functional as F
 import torch.optim as optim
 # dataset definitions, image transformation tools
 from torchvision import datasets, transforms
-
+from torch.utils.data import DataLoader
 # Inherits from nn.module
-class Net(nn.module):
+class Net(nn.Module):
 	def __init__(self):
 		super(Net, self).__init__()
 		# Accept one input channel (image), outputs 20 matrices, 5x5 kernel	
@@ -52,7 +52,7 @@ def train(model, device, train_loader, optimizer, epoch):
 		# Reset computed gradients to 0
 		optimizer.zero_grad()
 		# Run data through forward pass of network (get output in current step)
-		output = mode(data)
+		output = model(data)
 		# Calculates loss at current step
 		loss = F.nll_loss(output, target)
 		# Back propagation (how much each parameter contributed to loss)
