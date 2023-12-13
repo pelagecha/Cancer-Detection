@@ -11,6 +11,7 @@ from torchvision import datasets, transforms
 # Inherits from nn.module
 class Net(nn.module):
 	def __init__(self):
+		super(Net, self).__init__()
 		# Accept one input channel (image), outputs 20 matrices, 5x5 kernel	
 		self.conv1 = nn.Conv2d(1, 20, 5)
 		# Takes output of previous conv into input
@@ -33,7 +34,7 @@ def forward(self, x):
 	# Transform output of pooling and convolution to 1d
 	x = x.view(-1, 4*4*50)
 	x = F.relu(self.fc1(x))
-	x = self(fc2(x))
+	x = self.fc2(x)
 
 	return F.log_softmax(x, dim=1)
 
