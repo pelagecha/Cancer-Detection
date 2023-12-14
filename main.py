@@ -28,7 +28,7 @@ print(len(train_ds), len(val_ds))
 
 
 '''DATA LOADING'''
-batch_size = 256 # can be changed (doubled)
+batch_size = 512 # can be changed (doubled)
 # shuffling leads to faster training, num_workers specifies number of cpu cores used, pin_memory if images are same size.
 train_dl = DataLoader(train_ds, batch_size, shuffle=True, pin_memory=True)
 val_dl = DataLoader(val_ds, batch_size*2, shuffle=True, pin_memory=True)
@@ -249,7 +249,7 @@ if __name__ == '__main__':
     # print(evaluate(model, val_dl))
     num_epochs = 10
     opt_func = torch.optim.Adam
-    lr = 0.01
+    lr = 0.001
     history = fit(num_epochs, lr, model, train_dl, val_dl, opt_func)
     print(history)
     # to_device(model, device)
