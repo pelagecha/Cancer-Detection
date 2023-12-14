@@ -82,6 +82,8 @@ def test(model, device, test_loader):
 			data, target = data.to(device), target.to(device)
 			# Put data through model
 			output = model(data)
+			
+			
 			# Adds up all loss
 			test_loss += F.nll_loss(output, target, reduction='sum').item()
 			# Predicted output (gets index of maximum probability in output factor)
