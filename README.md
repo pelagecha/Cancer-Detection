@@ -1,3 +1,10 @@
+Typical Pattern in CNNs:
+Convolution -> Activation -> Convolution -> Activation -> Pooling
+Convolution -> Activation -> Convolution -> Activation -> Pooling
+Flatten -> Fully Connected -> Activation
+Fully Connected -> Activation -> Output Layer
+
+
 Universal function approximator 
 - assigns label / category / class
 

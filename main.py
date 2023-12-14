@@ -28,19 +28,12 @@ print(len(train_ds), len(val_ds))
 
 
 '''DATA LOADING'''
-batch_size = 128 # can be changed (doubled)
+batch_size = 256 # can be changed (doubled)
 # shuffling leads to faster training, num_workers specifies number of cpu cores used, pin_memory if images are same size.
-train_dl = DataLoader(train_ds, batch_size, shuffle=True, num_workers=4, pin_memory=True)
-val_dl = DataLoader(val_ds, batch_size*2, shuffle=True, num_workers=4, pin_memory=True)
+train_dl = DataLoader(train_ds, batch_size, shuffle=True, pin_memory=True)
+val_dl = DataLoader(val_ds, batch_size*2, shuffle=True, pin_memory=True)
 
 
-simple_model = nn.Sequential(
-    nn.Conv2d(3, 8, kernel_size=3, stride=1, padding=1), nn.MaxPool2d(2, 2)
-)
-# num of channels(RGB), num of kernels, kernel size, stepsize, padding
-
-
-'''MAIN MODEL'''
 
 
 class ImageClassificationBase(nn.Module):
@@ -69,6 +62,38 @@ class ImageClassificationBase(nn.Module):
     def epoch_end(epoch, result):
         print("Epoch [{}], train_loss: {:.4f}, val_loss: {:.4f}, val_acc: {:.4f}".format(
             epoch, result['train_loss'], result['val_loss'], result['val_acc']))
+
+
+
+
+simple_model = nn.Sequential(
+    nn.Conv2d(3, 8, kernel_size=3, stride=1, padding=1), nn.MaxPool2d(2, 2)
+)
+class Simple(ImageClassificationBase):
+    def __init__(self):
+        super().__init__()
+        self.network = nn.Sequential(
+            nn.Conv2d(3, 8, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.Conv2d(8, 16, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2),  # output: 64 x 16 x 16
+
+            nn.Flatten(),
+            nn.Linear(256 * 4 * 4, 256),
+            nn.ReLU(),
+            nn.Linear(256, 128),
+            nn.ReLU(),
+            nn.Linear(128, 10))
+
+    def forward(self, xb):
+        return self.network(xb)
+
+# num of channels(RGB), num of kernels, kernel size, stepsize, padding
+
+
+'''MAIN MODEL'''
+
 
 
 class Cifar10CnnModel(ImageClassificationBase):
@@ -114,11 +139,14 @@ def evaluate(model, val_loader):
 def fit(epochs, lr, model, train_loader, val_loader, opt_func):
     history = []
     optimizer = opt_func(model.parameters(), lr)
+    count = 0
     for epoch in range(epochs):
         # Training Phase
         model.train()
         train_losses = []
         for batch in train_loader:
+            count += 1
+            print(count)
             loss = model.training_step(batch)
             train_losses.append(loss)
             loss.backward()
@@ -135,12 +163,20 @@ def fit(epochs, lr, model, train_loader, val_loader, opt_func):
 '''HELPER FUNCTIONS'''
 
 
+
+
+
+
 def get_default_device():
     """Pick GPU if available, else CPU"""
     if torch.cuda.is_available():
         return torch.device('cuda')
     else:
-        return torch.device('cpu')
+        if not torch.backends.mps.is_available():
+            return torch.device('cpu')
+        else:
+            return torch.device("mps")
+
 
 
 def to_device(data, device):
@@ -208,11 +244,12 @@ if __name__ == '__main__':
     device = get_default_device()
     val_dl = DeviceDataLoader(val_dl, device)
     train_dl = DeviceDataLoader(train_dl, device)
-    model = to_device(Cifar10CnnModel(), device)
+    model = to_device(Simple(), device)
+    # print(device)
     # print(evaluate(model, val_dl))
-    num_epochs = 1
+    num_epochs = 10
     opt_func = torch.optim.Adam
-    lr = 0.001
+    lr = 0.01
     history = fit(num_epochs, lr, model, train_dl, val_dl, opt_func)
     print(history)
     # to_device(model, device)
