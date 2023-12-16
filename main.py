@@ -6,33 +6,41 @@ import torch
 from matplotlib import pyplot as plt
 import torch.nn as nn
 import torch.nn.functional as F
-
-data_dir = "cifar10"
+data_dir = "dataset"
 # torch.set_num_threads(4)
 
 
+
+
+
+
+# README available at: https://nihcc.app.box.com/v/DeepLesion/file/306056134060
+# labeled data at: https://nihcc.app.box.com/v/ChestXray-NIHCC
 # load images as torch tensors from a folder for training
 # each tensor is shaped 3xWIDTHxHEIGHT (3 for RGB) |img, label = dataset[0] print(img.shape, label)|
-dataset = ImageFolder("C:/Users/Jakub/Documents/Uni Work/Cancer AI/cifar10/train", transform=ToTensor())
+train_ds = ImageFolder(data_dir + "/train", transform=ToTensor())
+val_ds = ImageFolder(data_dir + "/valid", transform=ToTensor())
+
+
+
 
 
 
 '''SPLITTING THE DATASET INTO TEST AND VALIDATE'''
-random_seed = 42 # could be any number
-torch.manual_seed(random_seed)
-val_size = 5000 # validation set size
-train_size = len(dataset) - val_size
-
-train_ds, val_ds = random_split(dataset, [train_size, val_size])
-print(len(train_ds), len(val_ds))
+# random_seed = 42 # could be any number
+# torch.manual_seed(random_seed)
+# val_size = 5000 # validation set size
+# train_size = len(dataset) - val_size
+#
+# train_ds, val_ds = random_split(dataset, [train_size, val_size])
+# print(len(train_ds), len(val_ds))
 
 
 '''DATA LOADING'''
-batch_size = 256 # can be changed (doubled)
+batch_size = 64 # can be changed (doubled)
 # shuffling leads to faster training, num_workers specifies number of cpu cores used, pin_memory if images are same size.
 train_dl = DataLoader(train_ds, batch_size, shuffle=True, pin_memory=True)
 val_dl = DataLoader(val_ds, batch_size*2, shuffle=True, pin_memory=True)
-
 
 
 
@@ -66,25 +74,33 @@ class ImageClassificationBase(nn.Module):
 
 
 
-simple_model = nn.Sequential(
-    nn.Conv2d(3, 8, kernel_size=3, stride=1, padding=1), nn.MaxPool2d(2, 2)
-)
+# simple_model = nn.Sequential(
+#     nn.Conv2d(3, 8, kernel_size=3, stride=1, padding=1), nn.MaxPool2d(2, 2)
+# )
+
 class Simple(ImageClassificationBase):
     def __init__(self):
         super().__init__()
         self.network = nn.Sequential(
-            nn.Conv2d(3, 8, kernel_size=3, padding=1),
+            nn.Conv2d(3, 16, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.Conv2d(8, 16, kernel_size=3, stride=1, padding=1),
+            nn.MaxPool2d(2, 2),  # output: 8 x 32 x 32
+
+            nn.Conv2d(16, 32, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.MaxPool2d(2, 2),  # output: 64 x 16 x 16
+            nn.MaxPool2d(2, 2),  # output: 16 x 16 x 16
+
+            nn.Conv2d(32, 64, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2),  # output: 32 x 8 x 8
 
             nn.Flatten(),
-            nn.Linear(256 * 4 * 4, 256),
+            nn.Linear(64 * 8 * 8, 256),  # Adjusted input size
             nn.ReLU(),
-            nn.Linear(256, 128),
-            nn.ReLU(),
-            nn.Linear(128, 10))
+            nn.Linear(256, 4)
+        )
+
+
 
     def forward(self, xb):
         return self.network(xb)
@@ -163,10 +179,24 @@ def fit(epochs, lr, model, train_loader, val_loader, opt_func):
 '''HELPER FUNCTIONS'''
 
 
+def plot_accuracies(history):
+    accuracies = [x['val_acc'] for x in history]
+    plt.plot(accuracies, '-x')
+    plt.xlabel("epoch")
+    plt.ylabel('accuracy')
+    plt.title('Accuracy vs epoch')
+    plt.show()
 
-
-
-
+def plot_losses(history):
+    train_losses = [x.get('train_loss') for x in history]
+    val_losses = [x.get('val_loss') for x in history]
+    plt.plot(train_losses, '-bx')
+    plt.plot(val_losses, '-rx')
+    plt.xlabel("epoch")
+    plt.ylabel("loss")
+    plt.legend(['Training', 'Validation'])
+    plt.title('Loss vs epoch')
+    plt.show()
 def get_default_device():
     """Pick GPU if available, else CPU"""
     if torch.cuda.is_available():
@@ -219,10 +249,10 @@ def show_batch(dl):
         plt.show()
         break
 
-def show_example(img, label):
-    print("Label: ", dataset.classes[label], "(" + str(label) + ")")
-    plt.imshow(img.permute(1, 2, 0)) # converts 3x32x32 into 32x32x3
-    plt.show()
+# def show_example(img, label):
+#     print("Label: ", dataset.classes[label], "(" + str(label) + ")")
+#     plt.imshow(img.permute(1, 2, 0)) # converts 3x32x32 into 32x32x3
+#     plt.show()
 
 
 def apply_kernel(image, kernel):
@@ -247,13 +277,14 @@ if __name__ == '__main__':
     model = to_device(Simple(), device)
     # print(device)
     # print(evaluate(model, val_dl))
-    num_epochs = 2
+    num_epochs = 200
     opt_func = torch.optim.Adam
-    lr = 0.05
+    lr = 0.001
     history = fit(num_epochs, lr, model, train_dl, val_dl, opt_func)
-    for story in history:
-        print(story)
     print(history)
+
+    plot_accuracies(history)
+    plot_losses(history)
     # to_device(model, device)
     # show_batch(val_dl)
     # show_example(*dataset[1]) # unpacks the tuple inline
