@@ -6,36 +6,41 @@ import torch
 from matplotlib import pyplot as plt
 import torch.nn as nn
 import torch.nn.functional as F
-data_dir = "Data"
+data_dir = "dataset"
 # torch.set_num_threads(4)
 
 
 
 
+
+
+# README available at: https://nihcc.app.box.com/v/DeepLesion/file/306056134060
 # labeled data at: https://nihcc.app.box.com/v/ChestXray-NIHCC
 # load images as torch tensors from a folder for training
 # each tensor is shaped 3xWIDTHxHEIGHT (3 for RGB) |img, label = dataset[0] print(img.shape, label)|
-dataset = ImageFolder(data_dir + "/train", transform=ToTensor())
-# val_ds = ImageFolder(data_dir + "/valid", transform=ToTensor())
+train_ds = ImageFolder(data_dir + "/train", transform=ToTensor())
+val_ds = ImageFolder(data_dir + "/valid", transform=ToTensor())
+
+
+
 
 
 
 '''SPLITTING THE DATASET INTO TEST AND VALIDATE'''
-random_seed = 42 # could be any number
-torch.manual_seed(random_seed)
-val_size = 5000 # validation set size
-train_size = len(dataset) - val_size
-
-train_ds, val_ds = random_split(dataset, [train_size, val_size])
-print(len(train_ds), len(val_ds))
+# random_seed = 42 # could be any number
+# torch.manual_seed(random_seed)
+# val_size = 5000 # validation set size
+# train_size = len(dataset) - val_size
+#
+# train_ds, val_ds = random_split(dataset, [train_size, val_size])
+# print(len(train_ds), len(val_ds))
 
 
 '''DATA LOADING'''
-batch_size = 512 # can be changed (doubled)
+batch_size = 32 # can be changed (doubled)
 # shuffling leads to faster training, num_workers specifies number of cpu cores used, pin_memory if images are same size.
 train_dl = DataLoader(train_ds, batch_size, shuffle=True, pin_memory=True)
 val_dl = DataLoader(val_ds, batch_size*2, shuffle=True, pin_memory=True)
-
 
 
 
@@ -72,28 +77,30 @@ class ImageClassificationBase(nn.Module):
 # simple_model = nn.Sequential(
 #     nn.Conv2d(3, 8, kernel_size=3, stride=1, padding=1), nn.MaxPool2d(2, 2)
 # )
+
 class Simple(ImageClassificationBase):
     def __init__(self):
         super().__init__()
         self.network = nn.Sequential(
             nn.Conv2d(3, 16, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.MaxPool2d(2, 2),  # output: 16 x 16 x 16
+            nn.MaxPool2d(2, 2),  # output: 8 x 32 x 32
 
             nn.Conv2d(16, 32, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.MaxPool2d(2, 2),  # output: 32 x 8 x 8
+            nn.MaxPool2d(2, 2),  # output: 16 x 16 x 16
 
             nn.Conv2d(32, 64, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.MaxPool2d(2, 2),  # output: 64 x 4 x 4
+            nn.MaxPool2d(2, 2),  # output: 32 x 8 x 8
 
             nn.Flatten(),
-            nn.Linear(64 * 4 * 4, 128),
+            nn.Linear(64 * 8 * 8, 256),  # Adjusted input size
             nn.ReLU(),
-            nn.Dropout(0.5),  # Adding dropout for regularization
-            nn.Linear(128, 10)
+            nn.Linear(256, 4)
         )
+
+
 
     def forward(self, xb):
         return self.network(xb)
@@ -270,9 +277,9 @@ if __name__ == '__main__':
     model = to_device(Simple(), device)
     # print(device)
     # print(evaluate(model, val_dl))
-    num_epochs = 10
+    num_epochs = 50
     opt_func = torch.optim.Adam
-    lr = 0.001
+    lr = 0.0005
     history = fit(num_epochs, lr, model, train_dl, val_dl, opt_func)
     print(history)
     # to_device(model, device)
