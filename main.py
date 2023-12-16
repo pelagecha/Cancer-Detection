@@ -13,7 +13,7 @@ data_dir = "cifar10"
 
 # load images as torch tensors from a folder for training
 # each tensor is shaped 3xWIDTHxHEIGHT (3 for RGB) |img, label = dataset[0] print(img.shape, label)|
-dataset = ImageFolder(data_dir + "/train", transform=ToTensor())
+dataset = ImageFolder("C:/Users/Jakub/Documents/Uni Work/Cancer AI/cifar10/train", transform=ToTensor())
 
 
 
@@ -247,10 +247,12 @@ if __name__ == '__main__':
     model = to_device(Simple(), device)
     # print(device)
     # print(evaluate(model, val_dl))
-    num_epochs = 10
+    num_epochs = 2
     opt_func = torch.optim.Adam
-    lr = 0.01
+    lr = 0.05
     history = fit(num_epochs, lr, model, train_dl, val_dl, opt_func)
+    for story in history:
+        print(story)
     print(history)
     # to_device(model, device)
     # show_batch(val_dl)
