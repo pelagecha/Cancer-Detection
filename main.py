@@ -37,7 +37,7 @@ val_ds = ImageFolder(data_dir + "/valid", transform=ToTensor())
 
 
 '''DATA LOADING'''
-batch_size = 32 # can be changed (doubled)
+batch_size = 64 # can be changed (doubled)
 # shuffling leads to faster training, num_workers specifies number of cpu cores used, pin_memory if images are same size.
 train_dl = DataLoader(train_ds, batch_size, shuffle=True, pin_memory=True)
 val_dl = DataLoader(val_ds, batch_size*2, shuffle=True, pin_memory=True)
@@ -277,11 +277,14 @@ if __name__ == '__main__':
     model = to_device(Simple(), device)
     # print(device)
     # print(evaluate(model, val_dl))
-    num_epochs = 50
+    num_epochs = 200
     opt_func = torch.optim.Adam
-    lr = 0.0005
+    lr = 0.001
     history = fit(num_epochs, lr, model, train_dl, val_dl, opt_func)
     print(history)
+
+    plot_accuracies(history)
+    plot_losses(history)
     # to_device(model, device)
     # show_batch(val_dl)
     # show_example(*dataset[1]) # unpacks the tuple inline
