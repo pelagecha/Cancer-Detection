@@ -6,14 +6,17 @@ import torch
 from matplotlib import pyplot as plt
 import torch.nn as nn
 import torch.nn.functional as F
-
-data_dir = "cifar10"
+data_dir = "Data"
 # torch.set_num_threads(4)
 
 
+
+
+# labeled data at: https://nihcc.app.box.com/v/ChestXray-NIHCC
 # load images as torch tensors from a folder for training
 # each tensor is shaped 3xWIDTHxHEIGHT (3 for RGB) |img, label = dataset[0] print(img.shape, label)|
 dataset = ImageFolder(data_dir + "/train", transform=ToTensor())
+# val_ds = ImageFolder(data_dir + "/valid", transform=ToTensor())
 
 
 
@@ -66,25 +69,31 @@ class ImageClassificationBase(nn.Module):
 
 
 
-simple_model = nn.Sequential(
-    nn.Conv2d(3, 8, kernel_size=3, stride=1, padding=1), nn.MaxPool2d(2, 2)
-)
+# simple_model = nn.Sequential(
+#     nn.Conv2d(3, 8, kernel_size=3, stride=1, padding=1), nn.MaxPool2d(2, 2)
+# )
 class Simple(ImageClassificationBase):
     def __init__(self):
         super().__init__()
         self.network = nn.Sequential(
-            nn.Conv2d(3, 8, kernel_size=3, padding=1),
+            nn.Conv2d(3, 16, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.Conv2d(8, 16, kernel_size=3, stride=1, padding=1),
+            nn.MaxPool2d(2, 2),  # output: 16 x 16 x 16
+
+            nn.Conv2d(16, 32, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.MaxPool2d(2, 2),  # output: 64 x 16 x 16
+            nn.MaxPool2d(2, 2),  # output: 32 x 8 x 8
+
+            nn.Conv2d(32, 64, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2),  # output: 64 x 4 x 4
 
             nn.Flatten(),
-            nn.Linear(256 * 4 * 4, 256),
+            nn.Linear(64 * 4 * 4, 128),
             nn.ReLU(),
-            nn.Linear(256, 128),
-            nn.ReLU(),
-            nn.Linear(128, 10))
+            nn.Dropout(0.5),  # Adding dropout for regularization
+            nn.Linear(128, 10)
+        )
 
     def forward(self, xb):
         return self.network(xb)
@@ -163,10 +172,24 @@ def fit(epochs, lr, model, train_loader, val_loader, opt_func):
 '''HELPER FUNCTIONS'''
 
 
+def plot_accuracies(history):
+    accuracies = [x['val_acc'] for x in history]
+    plt.plot(accuracies, '-x')
+    plt.xlabel("epoch")
+    plt.ylabel('accuracy')
+    plt.title('Accuracy vs epoch')
+    plt.show()
 
-
-
-
+def plot_losses(history):
+    train_losses = [x.get('train_loss') for x in history]
+    val_losses = [x.get('val_loss') for x in history]
+    plt.plot(train_losses, '-bx')
+    plt.plot(val_losses, '-rx')
+    plt.xlabel("epoch")
+    plt.ylabel("loss")
+    plt.legend(['Training', 'Validation'])
+    plt.title('Loss vs epoch')
+    plt.show()
 def get_default_device():
     """Pick GPU if available, else CPU"""
     if torch.cuda.is_available():
@@ -219,10 +242,10 @@ def show_batch(dl):
         plt.show()
         break
 
-def show_example(img, label):
-    print("Label: ", dataset.classes[label], "(" + str(label) + ")")
-    plt.imshow(img.permute(1, 2, 0)) # converts 3x32x32 into 32x32x3
-    plt.show()
+# def show_example(img, label):
+#     print("Label: ", dataset.classes[label], "(" + str(label) + ")")
+#     plt.imshow(img.permute(1, 2, 0)) # converts 3x32x32 into 32x32x3
+#     plt.show()
 
 
 def apply_kernel(image, kernel):

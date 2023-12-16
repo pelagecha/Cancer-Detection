@@ -1,3 +1,8 @@
+"Data" folder contains scans of lesions. Types 1~8 correspond to bone, abdomen, mediastinum, liver, lung,
+kidney, soft tissue, and pelvis, respectively.
+
+
+
 Typical Pattern in CNNs:
 Convolution -> Activation -> Convolution -> Activation -> Pooling
 Convolution -> Activation -> Convolution -> Activation -> Pooling
@@ -236,3 +241,39 @@ Transfer learning - use other AI's learning as starting point
 Object detection provides object position (bounding box)
 
 
+
+
+n DL_info.csv, each row is the information of a lesion in DeepLesion. The meaning of the columns
+are:
+1. File name. Please replace the last underscore with / or \ to indicate sub-folders.
+2. Patient index starting from 1.
+3. Study index for each patient starting from 1. There are 1~26 studies for each patient.
+4. Series ID.
+5. Slice index of the key slice containing the lesion annotation, starting from 1.
+6. 8D vector, the image coordinates (in pixel) of the two RECIST diameters of the lesion. [x11,
+y11, x12, y12, x21, y21, x22, y22]. The first 4 coordinates are for the long axis. Please see our paper
+and its supplementary material for further explanation.
+7. 4D vector, the bounding-box [x1, y1, x2, y2] of the lesion (in pixel) estimated from the RECIST
+diameters, see our paper.
+8. 2D vector, the lengths of the long and short axes. The unit is pixels.
+9. The relative body position of the center of the lesion. The z-coordinates were predicted by the
+self-supervised body part regressor. See our paper for details. The coordinates are approximate
+and just for reference.
+10. The type of the lesion. Types 1~8 correspond to bone, abdomen, mediastinum, liver, lung,
+kidney, soft tissue, and pelvis, respectively. See our paper for details. The lesion types are
+coarsely defined and just for reference. Only the lesions in the val and test sets were annotated
+with others denoted as -1.
+11. This field is set to 1 if the annotation of this lesion is possibly noisy according to manual check.
+We found 35 noisy annotations out of 32,735 till now.
+12. Slice range. Context slices neighboring to the key slice were provided in this dataset. For
+example, in the first lesion, the key slice is 109 and the slice range is 103~115, meaning that
+slices 103~115 are provided. For most lesions, we provide 30mm extra slices above and below
+the key slice, unless the long axis of the lesion is larger than this thickness (then we provide
+more) or the beginning or end of the volume is reached.
+13. Spacing (mm per pixel) of the x, y, and z axes. The 3rd value is the slice interval, or the physical
+distance between two slices.
+14. Image size.
+15. The windowing (min~max) in Hounsfield unit extracted from the original DICOM file.
+16. Patient gender. F for female and M for male.
+17. Patient age.
+18. Official randomly generated patient-level data split, train=1, validation=2, test=3
