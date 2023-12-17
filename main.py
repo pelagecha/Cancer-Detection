@@ -6,6 +6,7 @@ import torch
 from matplotlib import pyplot as plt
 import torch.nn as nn
 import torch.nn.functional as F
+import platform
 
 data_dir = "binary"
 # torch.set_num_threads(4)
@@ -15,8 +16,12 @@ data_dir = "binary"
 # labeled data at: https://nihcc.app.box.com/v/ChestXray-NIHCC
 # load images as torch tensors from a folder for training
 # each tensor is shaped 3xWIDTHxHEIGHT (3 for RGB) |img, label = dataset[0] print(img.shape, label)|
-train_ds = ImageFolder(data_dir + "/train", transform=ToTensor())
-val_ds = ImageFolder(data_dir + "/validate", transform=ToTensor())
+if(platform.system() == "Windows"):
+    train_ds = ImageFolder("C:\\Users\Jakub\Documents\\Uni Work\\Cancer AI\\" + data_dir + "\\train", transform=ToTensor())
+    val_ds = ImageFolder("C:\\Users\\Jakub\\Documents\\Uni Work\\Cancer AI\\" + data_dir + "\\validate", transform=ToTensor())
+else:
+    train_ds = ImageFolder(data_dir + "/train", transform=ToTensor())
+    val_ds = ImageFolder(data_dir + "/validate", transform=ToTensor())
 
 '''SPLITTING THE DATASET INTO TEST AND VALIDATE'''
 # random_seed = 42 # could be any number
