@@ -7,6 +7,7 @@ from matplotlib import pyplot as plt
 import torch.nn as nn
 import torch.nn.functional as F
 import platform
+from PIL import Image
 
 data_dir = "binary"
 # torch.set_num_threads(4)
@@ -38,7 +39,6 @@ batch_size = 64  # can be changed (doubled)
 # shuffling leads to faster training, num_workers specifies number of cpu cores used, pin_memory if images are same size.
 train_dl = DataLoader(train_ds, batch_size, shuffle=True, pin_memory=True)
 val_dl = DataLoader(val_ds, batch_size * 2, shuffle=True, pin_memory=True)
-
 
 class ImageClassificationBase(nn.Module):
     def training_step(self, batch):
@@ -265,6 +265,25 @@ def apply_kernel(image, kernel):
             output[i, j] = torch.sum(image[i:i + rk, j:j + ck] * kernel)
         return output
 
+def predict(model, device):
+    if(platform.system() == "Windows"):
+        image = Image.open(r"C:\Users\Jakub\Documents\Uni Work\Cancer AI\binary\prediction\cancerousImage.png")
+    else:
+        image = Image.open(data_dir + "\prediction\cancerousImage.png")
+
+    transform = ToTensor()
+    image_tensor = transform(image).unsqueeze(0)
+    image_tensor = to_device(image_tensor, device)    
+
+    model.eval()
+    with torch.no_grad():
+        output = model(image_tensor)
+
+    probabilities = F.softmax(output, dim=1)[0]
+    prob1 = probabilities[0].item()
+    prob2 = probabilities[1].item()
+    print("prob1 = " + str(prob1))
+    print("prob2 = " + str(prob2))
 
 if __name__ == '__main__':
     device = get_default_device()
@@ -275,11 +294,14 @@ if __name__ == '__main__':
     # print(evaluate(model, val_dl))
     num_epochs = 10
     opt_func = torch.optim.Adam
-    lr = 0.0005
+    lr = 0.005
     history = fit(num_epochs, lr, model, train_dl, val_dl, opt_func)
     print(history)
 
+    predict(model, device)
+
     plot_accuracies(history)
+
     # plot_losses(history)
     # to_device(model, device)
     # show_batch(val_dl)
