@@ -6,7 +6,7 @@ unzip it, and name it 'dataset'
 '''
 
 '''Resize:'''
-directory = "dataset"
+directory = "images"
 for root, dirs, files in os.walk(directory):
     for filename in files:
         if any(filename.endswith(k) for k in [".png", 'jpg', 'jpeg']):

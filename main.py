@@ -6,12 +6,9 @@ import torch
 from matplotlib import pyplot as plt
 import torch.nn as nn
 import torch.nn.functional as F
-data_dir = "dataset"
+
+data_dir = "binary"
 # torch.set_num_threads(4)
-
-
-
-
 
 
 # README available at: https://nihcc.app.box.com/v/DeepLesion/file/306056134060
@@ -19,12 +16,7 @@ data_dir = "dataset"
 # load images as torch tensors from a folder for training
 # each tensor is shaped 3xWIDTHxHEIGHT (3 for RGB) |img, label = dataset[0] print(img.shape, label)|
 train_ds = ImageFolder(data_dir + "/train", transform=ToTensor())
-val_ds = ImageFolder(data_dir + "/valid", transform=ToTensor())
-
-
-
-
-
+val_ds = ImageFolder(data_dir + "/validate", transform=ToTensor())
 
 '''SPLITTING THE DATASET INTO TEST AND VALIDATE'''
 # random_seed = 42 # could be any number
@@ -37,11 +29,10 @@ val_ds = ImageFolder(data_dir + "/valid", transform=ToTensor())
 
 
 '''DATA LOADING'''
-batch_size = 64 # can be changed (doubled)
+batch_size = 64  # can be changed (doubled)
 # shuffling leads to faster training, num_workers specifies number of cpu cores used, pin_memory if images are same size.
 train_dl = DataLoader(train_ds, batch_size, shuffle=True, pin_memory=True)
-val_dl = DataLoader(val_ds, batch_size*2, shuffle=True, pin_memory=True)
-
+val_dl = DataLoader(val_ds, batch_size * 2, shuffle=True, pin_memory=True)
 
 
 class ImageClassificationBase(nn.Module):
@@ -72,8 +63,6 @@ class ImageClassificationBase(nn.Module):
             epoch, result['train_loss'], result['val_loss'], result['val_acc']))
 
 
-
-
 # simple_model = nn.Sequential(
 #     nn.Conv2d(3, 8, kernel_size=3, stride=1, padding=1), nn.MaxPool2d(2, 2)
 # )
@@ -85,25 +74,22 @@ class Simple(ImageClassificationBase):
             nn.Conv2d(3, 16, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(2, 2),  # output: 8 x 32 x 32
-
             nn.Conv2d(16, 32, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(2, 2),  # output: 16 x 16 x 16
-
             nn.Conv2d(32, 64, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(2, 2),  # output: 32 x 8 x 8
-
             nn.Flatten(),
             nn.Linear(64 * 8 * 8, 256),  # Adjusted input size
             nn.ReLU(),
-            nn.Linear(256, 4)
+            nn.Linear(256, 2)
         )
-
-
-
     def forward(self, xb):
         return self.network(xb)
+
+
+
 
 # num of channels(RGB), num of kernels, kernel size, stepsize, padding
 
@@ -111,12 +97,11 @@ class Simple(ImageClassificationBase):
 '''MAIN MODEL'''
 
 
-
 class Cifar10CnnModel(ImageClassificationBase):
     def __init__(self):
         super().__init__()
         self.network = nn.Sequential(
-            nn.Conv2d(3, 32, kernel_size=3, padding=1),
+            nn.Conv2d(3, 16, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
@@ -144,13 +129,16 @@ class Cifar10CnnModel(ImageClassificationBase):
     def forward(self, xb):
         return self.network(xb)
 
+
 '''TRAINING'''
+
 
 @torch.no_grad()
 def evaluate(model, val_loader):
     model.eval()
     outputs = [model.validation_step(batch) for batch in val_loader]
     return model.validation_epoch_end(outputs)
+
 
 def fit(epochs, lr, model, train_loader, val_loader, opt_func):
     history = []
@@ -187,6 +175,7 @@ def plot_accuracies(history):
     plt.title('Accuracy vs epoch')
     plt.show()
 
+
 def plot_losses(history):
     train_losses = [x.get('train_loss') for x in history]
     val_losses = [x.get('val_loss') for x in history]
@@ -197,6 +186,8 @@ def plot_losses(history):
     plt.legend(['Training', 'Validation'])
     plt.title('Loss vs epoch')
     plt.show()
+
+
 def get_default_device():
     """Pick GPU if available, else CPU"""
     if torch.cuda.is_available():
@@ -206,7 +197,6 @@ def get_default_device():
             return torch.device('cpu')
         else:
             return torch.device("mps")
-
 
 
 def to_device(data, device):
@@ -233,10 +223,10 @@ class DeviceDataLoader:
         return len(self.dl)
 
 
-
 def accuracy(outputs, labels):
     _, preds = torch.max(outputs, dim=1)
     return torch.tensor(torch.sum(preds == labels).item() / len(labels))
+
 
 def show_batch(dl):
     """
@@ -244,10 +234,12 @@ def show_batch(dl):
     """
     for images, labels in dl:
         fig, ax = plt.subplots(figsize=(12, 6))
-        ax.set_xticks([]); ax.set_yticks([])
+        ax.set_xticks([]);
+        ax.set_yticks([])
         ax.imshow(make_grid(images, nrow=16).permute(1, 2, 0))  # Adjust nrow as needed
         plt.show()
         break
+
 
 # def show_example(img, label):
 #     print("Label: ", dataset.classes[label], "(" + str(label) + ")")
@@ -260,14 +252,13 @@ def apply_kernel(image, kernel):
     KERNEL APPLICATION (CONVERSTION TO VECTOR)
     """
     ri, ci = image.shape  # image dimensions
-    rk, ck = kernel.shape # kernel dimensions
+    rk, ck = kernel.shape  # kernel dimensions
     ro, co = ri - rk + 1, ci - ck + 1
     output = torch.zeros([ro, co])
     for i in range(ro):
         for j in range(co):
-            output[i, j] = torch.sum(image[i:i+rk, j:j+ck] * kernel)
+            output[i, j] = torch.sum(image[i:i + rk, j:j + ck] * kernel)
         return output
-
 
 
 if __name__ == '__main__':
@@ -277,23 +268,17 @@ if __name__ == '__main__':
     model = to_device(Simple(), device)
     # print(device)
     # print(evaluate(model, val_dl))
-    num_epochs = 200
+    num_epochs = 10
     opt_func = torch.optim.Adam
-    lr = 0.001
+    lr = 0.0005
     history = fit(num_epochs, lr, model, train_dl, val_dl, opt_func)
     print(history)
 
     plot_accuracies(history)
-    plot_losses(history)
+    # plot_losses(history)
     # to_device(model, device)
     # show_batch(val_dl)
     # show_example(*dataset[1]) # unpacks the tuple inline
-
-
-
-
-
-
 
 '''
 Training set is used to train the model. It's like memorizing the testbook.
