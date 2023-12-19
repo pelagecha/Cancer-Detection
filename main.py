@@ -8,8 +8,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import platform
 from PIL import Image
-
-data_dir = "binary"
+data_dir = "dataset"
+PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.1
 # torch.set_num_threads(4)
 
 
@@ -78,17 +78,18 @@ class Simple(ImageClassificationBase):
         self.network = nn.Sequential(
             nn.Conv2d(3, 16, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.MaxPool2d(2, 2),  # output: 8 x 32 x 32
+            nn.MaxPool2d(4, 4),  # output: 16 x 32 x 32 (128 / 4 = 32)
             nn.Conv2d(16, 32, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.MaxPool2d(2, 2),  # output: 16 x 16 x 16
+            nn.MaxPool2d(2, 2),  # output: 32 x 16 x 16
             nn.Conv2d(32, 64, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.MaxPool2d(2, 2),  # output: 32 x 8 x 8
+            nn.MaxPool2d(2, 2),  # output: 64 x 8 x 8
             nn.Flatten(),
             nn.Linear(64 * 8 * 8, 256),  # Adjusted input size
             nn.ReLU(),
-            nn.Linear(256, 2)
+            nn.Dropout(0.5),
+            nn.Linear(256, 15)
         )
     def forward(self, xb):
         return self.network(xb)

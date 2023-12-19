@@ -1,8 +1,9 @@
 import pandas as pd
 import shutil
 import os
-import random
+import cv2  # pip install opencv-python
 from sklearn.model_selection import train_test_split
+
 # '''CREATE FOLDERS IF THEY DON'T EXIST'''
 # folders = ['train', 'val', 'test']
 # for folder in folders:
@@ -11,6 +12,24 @@ from sklearn.model_selection import train_test_split
 source_folder = 'dataset'  # Folder containing the files to move
 # metadata_folder = "Data_E"  # Folder containing the file specification
 metadata_folder = 'metadata.csv'
+
+
+def image_resize(directory, width, height):
+    for root, dirs, files in os.walk(directory):
+        for filename in files:
+            if any(filename.endswith(k) for k in [".png", 'jpg', 'jpeg']):
+                file_path = os.path.join(root, filename)
+                image = cv2.imread(file_path)
+                if image is not None:
+                    # Perform resizing
+                    resized = cv2.resize(image, (width, height))
+
+                    # Save the resized image, overwriting the original
+                    cv2.imwrite(file_path, resized)
+                    print(f"Resized and saved {filename}")
+                else:
+                    print(f"Could not read {filename}")
+
 
 def split_train_val_test(data_folder):
     # Get the list of files in the dataset folder
@@ -21,9 +40,9 @@ def split_train_val_test(data_folder):
     validate_files, test_files = train_test_split(test_files, test_size=0.33, random_state=42)
 
     # Define paths for train, validate, and test folders
-    train_folder = 'dataset/train'
-    validate_folder = 'dataset/validate'
-    test_folder = 'dataset/test'
+    train_folder = data_folder + '/train'
+    validate_folder = data_folder + '/validate'
+    test_folder = data_folder + '/test'
 
     # Create folders if they don't exist
     for folder in [train_folder, validate_folder, test_folder]:
@@ -71,26 +90,30 @@ def organize_images_by_lesion_type(base_folder):
 
 # Organize images into folders based on lesion types
 
-
-def binary(source_directory):
-
-    # List all folders in the source directory
-    folders = [folder for folder in os.listdir(source_directory) if
-               os.path.isdir(os.path.join(source_directory, folder))]
-
-    # Iterate through folders, move images except from 'No Finding' folder
-    for folder in folders:
-        if folder != 'No Finding':
-            folder_path = os.path.join(source_directory, folder)
-            for file in os.listdir(folder_path):
-                source_file = os.path.join(folder_path, file)
-                if os.path.isfile(source_file):
-                    destination_file = os.path.join(source_directory, file)
-                    shutil.move(source_file, destination_file)
-            shutil.rmtree(folder_path)  # Remove the emptied folder
+#
+# def binary(source_directory):
+#
+#     # List all folders in the source directory
+#     folders = [folder for folder in os.listdir(source_directory) if
+#                os.path.isdir(os.path.join(source_directory, folder))]
+#
+#     # Iterate through folders, move images except from 'No Finding' folder
+#     for folder in folders:
+#         if folder != 'No Finding':
+#             folder_path = os.path.join(source_directory, folder)
+#             for file in os.listdir(folder_path):
+#                 source_file = os.path.join(folder_path, file)
+#                 if os.path.isfile(source_file):
+#                     destination_file = os.path.join(source_directory, file)
+#                     shutil.move(source_file, destination_file)
+#             shutil.rmtree(folder_path)  # Remove the emptied folder
 
 
 if __name__ == '__main__':
+    image_resize("dataset", 128, 128)
+    # split_train_val_test("dataset")
     # organize_images_by_lesion_type("dataset/test")
-    binary('binary/train')
-    binary('binary/validate')
+    # organize_images_by_lesion_type("dataset/validate")
+    # organize_images_by_lesion_type("dataset/train")
+    # binary('binary/train')
+    # binary('binary/validate')
