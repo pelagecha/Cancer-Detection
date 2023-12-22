@@ -9,7 +9,7 @@ import torch.nn.functional as F
 import platform
 from PIL import Image
 data_dir = "dataset"
-PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.1
+# PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.1
 # torch.set_num_threads(4)
 
 
@@ -291,7 +291,7 @@ if __name__ == '__main__':
     val_dl = DeviceDataLoader(val_dl, device)
     train_dl = DeviceDataLoader(train_dl, device)
     model = to_device(Simple(), device)
-    # print(device)
+    print(device)
     # print(evaluate(model, val_dl))
     num_epochs = 10
     opt_func = torch.optim.Adam
