@@ -7,6 +7,16 @@
     <title>Hell Yeah</title>
 </head>
 <body>
-    <h1>You are a human</h1>
+    <h1>{{content}}</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*">
+        <input type="submit" value="Upload">
+    </form>
+
+    {% if filename %}
+        <h2>Uploaded Image:</h2>
+        <img src="{{ url_for('uploaded_file', filename=filename) }}" alt="Uploaded Image" width="200" height="200">
+    {% endif %}
 </body>
 </html>
