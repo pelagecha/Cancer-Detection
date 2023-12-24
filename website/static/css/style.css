@@ -159,6 +159,16 @@ body {
     left: 0;
 }
 
+#uploaded-image {
+    width: 300px;
+    height: 300px;
+    position: relative;
+
+}
+
+/*#uploaded-image {*/
+/*    background-color: black;*/
+/*}*/
 /* Styles for the image when the drop zone is hovered */
 #drop-zone.hover img {
     position: relative; /* Add this if not present */

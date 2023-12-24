@@ -33,7 +33,7 @@ function handleDrop(event) {
 
 function handleFiles(files) {
     const file = files[0];
-    displayImage(file);
+    displayImage(file); // Call the displayImage function
 }
 
 function displayImage(file) {
@@ -51,6 +51,24 @@ function displayImage(file) {
     reader.readAsDataURL(file);
 }
 
+
+function displayUploadedImage(file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.alt = "Uploaded Image";
+        img.width = "100%";
+        img.height = "100%";
+        img.style.objectFit = "cover"; // Ensures the image fills the box without distortion
+        const uploadedImage = document.getElementById('uploaded-image');
+        uploadedImage.innerHTML = '';
+        uploadedImage.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+}
+
+
 function uploadFiles(files) {
     const formData = new FormData();
     formData.append('file', files[0]);
@@ -61,11 +79,13 @@ function uploadFiles(files) {
     })
     .then(response => {
         console.log('File uploaded successfully!');
+        displayUploadedImage(files[0]); // Call displayUploadedImage function here
     })
     .catch(error => {
         console.error('Error uploading file:', error);
     });
 }
+
 
 function handleDropZoneClick() {
     isDropped = false;
@@ -73,7 +93,6 @@ function handleDropZoneClick() {
     document.getElementById('file-upload').click();
 }
 
-document.getElementById('file-upload').addEventListener('change', handleFileSelect);
 
 function handleFileSelect(event) {
     const file = event.target.files[0];
@@ -83,6 +102,9 @@ function handleFileSelect(event) {
     }
 }
 
+
+document.getElementById('file-upload').addEventListener('change', handleFileSelect);
+
 document.getElementById('upload-form').addEventListener('submit', function (event) {
     event.preventDefault();
     const files = document.getElementById('file-upload').files;
@@ -90,3 +112,4 @@ document.getElementById('upload-form').addEventListener('submit', function (even
         handleFiles(files);
     }
 });
+
