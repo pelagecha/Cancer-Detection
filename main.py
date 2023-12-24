@@ -8,7 +8,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 import platform
 from PIL import Image
+import os
 data_dir = "dataset"
+
 # PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.1
 # torch.set_num_threads(4)
 
@@ -68,28 +70,25 @@ class ImageClassificationBase(nn.Module):
             epoch, result['train_loss'], result['val_loss'], result['val_acc']))
 
 
-# simple_model = nn.Sequential(
-#     nn.Conv2d(3, 8, kernel_size=3, stride=1, padding=1), nn.MaxPool2d(2, 2)
-# )
 
 class Simple(ImageClassificationBase):
     def __init__(self):
         super().__init__()
         self.network = nn.Sequential(
-            nn.Conv2d(3, 16, kernel_size=3, padding=1),
+            nn.Conv2d(3, 8, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(4, 4),  # output: 16 x 32 x 32 (128 / 4 = 32)
-            nn.Conv2d(16, 32, kernel_size=3, padding=1),
+            nn.Conv2d(8, 16, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(2, 2),  # output: 32 x 16 x 16
-            nn.Conv2d(32, 64, kernel_size=3, padding=1),
+            nn.Conv2d(16, 32, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(2, 2),  # output: 64 x 8 x 8
             nn.Flatten(),
-            nn.Linear(64 * 8 * 8, 256),  # Adjusted input size
+            nn.Linear(32 * 8 * 8, 128),  # Adjusted input size
             nn.ReLU(),
             nn.Dropout(0.5),
-            nn.Linear(256, 15)
+            nn.Linear(128, 10)
         )
     def forward(self, xb):
         return self.network(xb)
@@ -286,6 +285,14 @@ def predict(model, device):
     print("prob1 = " + str(prob1))
     print("prob2 = " + str(prob2))
 
+
+
+def save(model):
+    directory = '/prediction/models'
+    os.makedirs(directory, exist_ok=True)
+    torch.save(model.state_dict(), "/prediction/models/model.pt")
+
+
 if __name__ == '__main__':
     device = get_default_device()
     val_dl = DeviceDataLoader(val_dl, device)
@@ -293,15 +300,14 @@ if __name__ == '__main__':
     model = to_device(Simple(), device)
     print(device)
     # print(evaluate(model, val_dl))
-    num_epochs = 10
+    num_epochs = 1
     opt_func = torch.optim.Adam
     lr = 0.005
     history = fit(num_epochs, lr, model, train_dl, val_dl, opt_func)
     print(history)
-
-    predict(model, device)
-
+    # predict(model, device)
     plot_accuracies(history)
+    save(model)
 
     # plot_losses(history)
     # to_device(model, device)
