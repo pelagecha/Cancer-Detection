@@ -19,7 +19,7 @@ function handleDragEnter(event) {
 function handleDragLeave(event) {
     event.target.classList.remove('hover');
 }
-
+/*
 function handleDrop(event) {
     event.preventDefault();
     event.target.classList.remove('hover');
@@ -28,6 +28,20 @@ function handleDrop(event) {
     if (files.length > 0) {
         handleFiles(files);
         uploadFiles(files);
+    }
+}
+*/
+function handleDrop(event) {
+    event.preventDefault();
+    event.target.classList.remove('hover');
+
+    const files = event.dataTransfer.files;
+    if (files.length > 0) {
+        handleFiles(files);
+
+        // Update the file input with the dropped file
+        const fileInput = document.getElementById('file-upload');
+        fileInput.files = files;
     }
 }
 
@@ -89,7 +103,7 @@ function uploadFiles(files) {
     const formData = new FormData();
     formData.append('file', files[0]);
 
-    fetch('/upload', {
+    fetch('/uploads', {
         method: 'POST',
         body: formData
     })

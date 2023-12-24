@@ -29,7 +29,15 @@
                 ondrop="handleDrop(event)"
                 onclick="handleDropZoneClick()"
             >
-                <p>Click or Drop your files here</p>
+                {% if filename %}
+                    <img
+                        id="uploaded-image"
+                        src="{{ url_for('uploaded_file', filename=filename) }}"
+                        alt="Uploaded Image"
+                    >
+                {% else %}
+                    <p>Click or Drop your files here</p>
+                {% endif %}
             </div>
         </div>
         <div class="input">
@@ -39,15 +47,6 @@
             </form>
         </div>
     </div>
-<!--    <h2 id="uploaded-image-title">Uploaded Image:</h2>-->
-    <img
-        id="uploaded-image"
-        src="{% if filename %}{{ url_for('uploaded_file', filename=filename) }}{% endif %}"
-        alt="Uploaded Image"
-        {% if not filename %}
-            style="display: none;"
-        {% endif %}
-    >
 </body>
 </html>
 
