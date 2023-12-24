@@ -60,8 +60,6 @@ function displayImage(file) {
 }
 
 
-
-
 function handleDropZoneClick() {
     isDropped = false;
     document.getElementById('file-upload').value = null; // Clear previously selected file
@@ -102,15 +100,14 @@ function uploadFiles(files) {
         method: 'POST',
         body: formData
     })
-    .then(response => {
-        console.log('File uploaded successfully!');
-        // If needed, update the displayed image here after successful upload
-    })
-    .catch(error => {
-        console.error('Error uploading file:', error);
-    });
+        .then(response => {
+            console.log('File uploaded successfully!');
+            // If needed, update the displayed image here after successful upload
+        })
+        .catch(error => {
+            console.error('Error uploading file:', error);
+        });
 }
 
 const dropZoneImage = document.getElementById('drop-zone').querySelector('img');
 dropZoneImage.classList.add('confirmed');
-

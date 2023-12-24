@@ -1,0 +1,305 @@
+/* Typography */
+h1 {
+    border: 2px #eee solid;
+    color: black;
+    text-align: center;
+    padding: 10px;
+    background-color: #7289da;
+    font-family: Roboto, sans-serif;
+}
+
+h2 {
+    font-size: 24px;
+    margin-top: 20px;
+}
+
+/* Body and Background */
+#main-body {
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #36393e;
+    background-image: url("backg2.jpeg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #fff;
+}
+
+body {
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #36393e;
+    background-image: url("backg2.jpeg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #fff;
+}
+
+/* Navbar */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+    font-family: 'Cinzel', sans-serif;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.topnav {
+    display: flex;
+    align-items: center;
+    background-color: #070f21;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    z-index: 999;
+}
+
+.nav-link {
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  /*border-radius: 20px;*/
+  background-color: #070f21;
+  transition: background-color 0.4s ease, box-shadow 0.4s ease;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0); /* Initial shadow */
+}
+
+.nav-link:hover {
+    background: linear-gradient(45deg, #00264d, #001f4d); /* Adjust gradient colors */
+    box-shadow: 0 0 20px rgba(255, 0, 204, 0.5); /* Adjust shadow intensity */
+}
+
+
+.nav-link:active {
+  background-color: #7289da;
+  transform: scale(0.98); /* Slight scale down on click */
+}
+
+.creator-info {
+    background-image: conic-gradient(yellow, blue, red, cyan, orange, palevioletred, green);
+    position: fixed;
+    right: 5px; /* Adjust this value to position it as desired */
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: bold;
+    background-clip: text; /* Applies text color to the background */
+    color: transparent; /* Hides the text color */
+    -webkit-background-clip: text; /* For Safari */
+    text-fill-color: transparent; /* For Firefox */
+    animation: rainbow-text 5s infinite; /* Animating the text */
+}
+
+@keyframes rainbow-text {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+    100% {
+        filter: hue-rotate(360deg);
+    }
+}
+
+.github-link {
+    color: #5899c3;
+}
+
+
+
+
+
+/* Buttons and Inputs */
+
+#file-accept {
+    align-items: center;
+    position: absolute;
+    padding: 10px;
+    border-radius: 10px;
+    /*background-color: #7289da;*/
+    background-image: radial-gradient(whitesmoke, #7289da);
+}
+
+.input {
+    margin-bottom: 20px;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-family: Roboto, sans-serif;
+    background-color: red;
+    color: black;
+    border-radius: 5px;
+}
+
+.custom-file-upload input[type="file"] {
+    display: none;
+}
+
+.input input[type="submit"] {
+    display: block;
+    margin: 10px auto 0; /* Adding top margin */
+    padding: 10px 15px;
+    background-color: #00264d;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+
+/* Add hover effect */
+.input input[type="submit"]:hover {
+    background-color: #3f3c87;
+    box-shadow: 0 0 20px rgba(255, 0, 204, 0.5); /* Adjust shadow intensity */
+}
+
+
+
+/* Drag and Drop */
+
+
+#drop-zone {
+    width: 300px;
+    height: 300px;
+    padding: 10px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    margin: 0 auto; /* Added to horizontally center the element */
+    background-color: #6e415d;
+    opacity: 1;
+}
+
+
+/* Styles for when the drop zone is hovered */
+#drop-zone.hover {
+    border-color: #3498db;
+    /*background-color: black;*/
+}
+
+/* Styles for the dragover effect */
+#drop-zone.dragover {
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+/* Image styles within the drop zone */
+#drop-zone img {
+    width: 325px;
+    height: 325px;
+    border-radius: 10px;
+    max-width: 110%;
+    max-height: 110%;
+    object-fit: cover;
+    opacity: 1;
+    transition: opacity 1s, width 1s ease-out, height 1s ease-out, border-radius 1s ease-out; /* Reduced transition durations */
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+
+
+#uploaded-image {
+    width: 100px;
+    height: 100px;
+    position: relative;
+}
+
+/*#uploaded-image {*/
+/*    background-color: black;*/
+/*}*/
+/* Styles for the image when the drop zone is hovered */
+#drop-zone.hover img {
+    position: relative; /* Add this if not present */
+    opacity: 0.7;
+}
+#drop-zone.hover p {
+}
+
+/* Styles for the image when it's confirmed */
+#drop-zone img.confirmed {
+    width: 300px;
+    height: 300px;
+    transition: opacity 1s, width 1s ease-out, height 1s ease-out, border-radius 1s ease-out; /* Reduced transition durations */
+}
+
+
+
+
+.about-section {
+    position: absolute;
+    width: 70%;
+    height: 40%;
+    left: 0px;
+    top: 50px;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease-in-out;
+
+}
+
+.about-heading {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #fff;
+}
+.horizontal-line {
+    width: 100%;
+    border-bottom: 1px solid #fff;
+    margin: 0 auto;
+}
+.about-text {
+    font-size: 16px;
+    margin-top: 20px;
+    color: #fff;
+}
+
+#about-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #36393e;
+    background-image: url("backgabout.jpg");
+    /*background-position: center;*/
+    /*background-repeat: no-repeat;*/
+    /*background-size: cover;*/
+    color: #fff;
+}
+
+
+#particles-js {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+}
