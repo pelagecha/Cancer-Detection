@@ -32,6 +32,10 @@ def index():
 def about():
     return render_template('/about.html')
 
+@app.route('/news')
+def news():
+    return render_template('/test.html')
+
 @app.route('/', methods=['POST'])
 def upload_image():
     if "file" not in request.files:
