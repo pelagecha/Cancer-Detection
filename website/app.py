@@ -28,6 +28,10 @@ def index():
     pred = "Please insert an image"
     return render_template('index.html', content=pred)
 
+@app.route('/about')
+def about():
+    return render_template('/about.html')
+
 @app.route('/', methods=['POST'])
 def upload_image():
     if "file" not in request.files:

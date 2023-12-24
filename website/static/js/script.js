@@ -33,7 +33,7 @@ function handleDrop(event) {
 
 function handleFiles(files) {
     const file = files[0];
-    displayImage(file); // Call the displayImage function
+    displayImage(file); // Display dropped image
 }
 
 function displayImage(file) {
@@ -52,22 +52,38 @@ function displayImage(file) {
 }
 
 
-function displayUploadedImage(file) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        const img = document.createElement('img');
-        img.src = e.target.result;
-        img.alt = "Uploaded Image";
-        img.width = "100%";
-        img.height = "100%";
-        img.style.objectFit = "cover"; // Ensures the image fills the box without distortion
-        const uploadedImage = document.getElementById('uploaded-image');
-        uploadedImage.innerHTML = '';
-        uploadedImage.appendChild(img);
-    };
-    reader.readAsDataURL(file);
+
+function handleDropZoneClick() {
+    isDropped = false;
+    document.getElementById('file-upload').value = null; // Clear previously selected file
+    document.getElementById('file-upload').click();
 }
 
+function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (file) {
+        isDropped = false;
+        handleFiles([file]);
+    }
+}
+
+document.getElementById('file-upload').addEventListener('change', handleFileSelect);
+
+document.getElementById('upload-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    const files = document.getElementById('file-upload').files;
+    if (files.length > 0) {
+        handleFiles(files);
+    }
+});
+
+function handleUpload() {
+    const files = document.getElementById('file-upload').files;
+    if (files.length > 0) {
+        handleFiles(files);
+        uploadFiles(files);
+    }
+}
 
 function uploadFiles(files) {
     const formData = new FormData();
@@ -79,37 +95,10 @@ function uploadFiles(files) {
     })
     .then(response => {
         console.log('File uploaded successfully!');
-        displayUploadedImage(files[0]); // Call displayUploadedImage function here
+        // If needed, update the displayed image here after successful upload
     })
     .catch(error => {
         console.error('Error uploading file:', error);
     });
 }
-
-
-function handleDropZoneClick() {
-    isDropped = false;
-    document.getElementById('file-upload').value = null; // Clear previously selected file
-    document.getElementById('file-upload').click();
-}
-
-
-function handleFileSelect(event) {
-    const file = event.target.files[0];
-    if (file) {
-        isDropped = false;
-        handleFiles([file]);
-    }
-}
-
-
-document.getElementById('file-upload').addEventListener('change', handleFileSelect);
-
-document.getElementById('upload-form').addEventListener('submit', function (event) {
-    event.preventDefault();
-    const files = document.getElementById('file-upload').files;
-    if (files.length > 0) {
-        handleFiles(files);
-    }
-});
 
