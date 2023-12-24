@@ -2,21 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
-
     <title>Hell Yeah</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+    <script src="/script.js" defer></script>
 </head>
 <body>
-    <h1>{{content}}</h1>
+    <div class="header">
+        <div class="topnav">
+            <!-- Your navigation links -->
+            <a class="active" href="#home">Home</a>
+            <a href="#news">News</a>
+            <a href="#contact">Contact</a>
+            <a href="#about">About</a>
+            <div class="creator-info">
+                <h3>Created by you and I.</h3>
+            </div>
+        </div>
+    </div>
 
-    <form method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept="image/*">
-        <input type="submit" value="Upload">
-    </form>
+    <div id="drop-zone-container">
+        <div id="drop-zone"
+            ondragover="handleDragOver(event)"
+            ondragenter="handleDragEnter(event)"
+            ondragleave="handleDragLeave(event)"
+            ondrop="handleDrop(event)"
+        >
+            <p>Drag &amp; Drop your files here</p>
+        </div>
+    </div>
+
+    <div class="input">
+        <form method="post" enctype="multipart/form-data">
+            <label for="file-upload" class="custom-file-upload">
+                <input type="file" id="file-upload" name="file" accept="image/*">
+                Choose File
+            </label>
+            <input type="submit" value="Upload">
+            {% if filename %}
+                <input type="button" value="Reset" onclick="resetImage()">
+            {% endif %}
+        </form>
+    </div>
 
     {% if filename %}
         <h2>Uploaded Image:</h2>
-        <img src="{{ url_for('uploaded_file', filename=filename) }}" alt="Uploaded Image" width="200" height="200">
+        <img
+            id="uploaded-image"
+            src="{{ url_for('uploaded_file', filename=filename) }}"
+            alt="Uploaded Image"
+            width="200"
+            height="200"
+        >
     {% endif %}
 </body>
 </html>

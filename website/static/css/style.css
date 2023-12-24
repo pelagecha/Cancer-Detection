@@ -1,11 +1,154 @@
+/* Typography */
 h1 {
     border: 2px #eee solid;
     color: black;
     text-align: center;
     padding: 10px;
     background-color: #7289da;
+    font-family: Roboto, sans-serif;
 }
 
-body {
-    background-color: #36393e;
+h2 {
+    font-size: 24px;
+    margin-top: 20px;
 }
+
+/* Body and Background */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #36393e;
+    background-image: url("backg2.jpeg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #fff;
+}
+
+/* Navbar */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+    font-family: 'Cinzel', sans-serif;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.topnav {
+    display: flex;
+    align-items: center;
+    background-color: #070f21;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    z-index: 999;
+}
+
+.topnav a {
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.topnav a:hover {
+    background-color: red;
+    color: black;
+}
+
+.topnav a.active {
+    background-color: #7289da;
+    color: white;
+}
+
+/* Creator Info */
+.creator-info {
+    /* Add specific styles for creator info */
+}
+
+/* Buttons and Inputs */
+.input {
+    margin-bottom: 20px;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 10px 15px;
+    cursor: pointer;
+    background-color: #3498db;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.custom-file-upload input[type="file"] {
+    display: none;
+}
+
+.input input[type="submit"] {
+    padding: 10px 15px;
+    background-color: #2ecc71;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Drag and Drop */
+
+
+#drop-zone {
+    width: 300px;
+    height: 200px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.3s ease-in-out;
+    margin: 0 auto; /* Added to horizontally center the element */
+}
+
+
+/* Styles for when the drop zone is hovered */
+#drop-zone.hover {
+    border-color: #3498db;
+}
+
+/* Styles for the dragover effect */
+#drop-zone.dragover {
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+/* Image styles within the drop zone */
+#drop-zone img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: opacity 0.5s, width 0.5s, height 0.5s;
+    opacity: 0;
+}
+
+/* Styles for the image when the drop zone is hovered */
+#drop-zone.hover img {
+    opacity: 1;
+}
+
+/* Styles for the image when it's confirmed */
+#drop-zone img.confirmed {
+    width: 100%;
+    height: 100%;
+}
+
+/* Additional styles for creator info */
+/* Your additional styles for creator info can go here */
