@@ -19,18 +19,7 @@ function handleDragEnter(event) {
 function handleDragLeave(event) {
     event.target.classList.remove('hover');
 }
-/*
-function handleDrop(event) {
-    event.preventDefault();
-    event.target.classList.remove('hover');
 
-    const files = event.dataTransfer.files;
-    if (files.length > 0) {
-        handleFiles(files);
-        uploadFiles(files);
-    }
-}
-*/
 function handleDrop(event) {
     event.preventDefault();
     event.target.classList.remove('hover');
@@ -58,12 +47,18 @@ function displayImage(file) {
         img.alt = "Dropped Image";
         img.width = 200;
         img.height = 200;
+
+        // Append the image to the drop zone
         const dropZone = document.getElementById('drop-zone');
-        dropZone.innerHTML = '';
+        dropZone.innerHTML = ''; // Clear previous content
         dropZone.appendChild(img);
+
+        // Add the confirmed class after the image is appended
+        img.classList.add('confirmed');
     };
     reader.readAsDataURL(file);
 }
+
 
 
 
@@ -115,4 +110,7 @@ function uploadFiles(files) {
         console.error('Error uploading file:', error);
     });
 }
+
+const dropZoneImage = document.getElementById('drop-zone').querySelector('img');
+dropZoneImage.classList.add('confirmed');
 

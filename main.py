@@ -9,8 +9,8 @@ import torch.nn.functional as F
 import platform
 from PIL import Image
 import os
-data_dir = "dataset"
-
+# data_dir = "dataset"
+data_dir = "cifar10"
 # PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.1
 # torch.set_num_threads(4)
 
@@ -19,21 +19,25 @@ data_dir = "dataset"
 # labeled data at: https://nihcc.app.box.com/v/ChestXray-NIHCC
 # load images as torch tensors from a folder for training
 # each tensor is shaped 3xWIDTHxHEIGHT (3 for RGB) |img, label = dataset[0] print(img.shape, label)|
-if(platform.system() == "Windows"):
-    train_ds = ImageFolder("C:\\Users\Jakub\Documents\\Uni Work\\Cancer AI\\" + data_dir + "\\train", transform=ToTensor())
-    val_ds = ImageFolder("C:\\Users\\Jakub\\Documents\\Uni Work\\Cancer AI\\" + data_dir + "\\validate", transform=ToTensor())
-else:
-    train_ds = ImageFolder(data_dir + "/train", transform=ToTensor())
-    val_ds = ImageFolder(data_dir + "/validate", transform=ToTensor())
+# if(platform.system() == "Windows"):
+#     train_ds = ImageFolder("C:\\Users\Jakub\Documents\\Uni Work\\Cancer AI\\" + data_dir + "\\train", transform=ToTensor())
+#     val_ds = ImageFolder("C:\\Users\\Jakub\\Documents\\Uni Work\\Cancer AI\\" + data_dir + "\\validate", transform=ToTensor())
+# else:
+#     train_ds = ImageFolder(data_dir + "/train", transform=ToTensor())
+#     val_ds = ImageFolder(data_dir + "/validate", transform=ToTensor())
+
+# train_ds = ImageFolder(data_dir + "/train", transform=ToTensor())
+# val_ds = ImageFolder(data_dir + "/validate", transform=ToTensor())
+dataset = ImageFolder(data_dir + "/train", transform=ToTensor())
 
 '''SPLITTING THE DATASET INTO TEST AND VALIDATE'''
-# random_seed = 42 # could be any number
-# torch.manual_seed(random_seed)
-# val_size = 5000 # validation set size
-# train_size = len(dataset) - val_size
-#
-# train_ds, val_ds = random_split(dataset, [train_size, val_size])
-# print(len(train_ds), len(val_ds))
+random_seed = 42 # could be any number
+torch.manual_seed(random_seed)
+val_size = 5000 # validation set size
+train_size = len(dataset) - val_size
+
+train_ds, val_ds = random_split(dataset, [train_size, val_size])
+print(len(train_ds), len(val_ds))
 
 
 '''DATA LOADING'''
@@ -77,19 +81,15 @@ class Simple(ImageClassificationBase):
         self.network = nn.Sequential(
             nn.Conv2d(3, 8, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.MaxPool2d(4, 4),  # output: 16 x 32 x 32 (128 / 4 = 32)
-            nn.Conv2d(8, 16, kernel_size=3, padding=1),
+            nn.Conv2d(8, 16, kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
-            nn.MaxPool2d(2, 2),  # output: 32 x 16 x 16
-            nn.Conv2d(16, 32, kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.MaxPool2d(2, 2),  # output: 64 x 8 x 8
+            nn.MaxPool2d(2, 2),  # output: 64 x 16 x 16
             nn.Flatten(),
-            nn.Linear(32 * 8 * 8, 128),  # Adjusted input size
+            nn.Linear(256 * 4 * 4, 256),
             nn.ReLU(),
-            nn.Dropout(0.5),
-            nn.Linear(128, 10)
-        )
+            nn.Linear(256, 128),
+            nn.ReLU(),
+            nn.Linear(128, 10))
     def forward(self, xb):
         return self.network(xb)
 
@@ -302,7 +302,7 @@ if __name__ == '__main__':
     # print(evaluate(model, val_dl))
     num_epochs = 1
     opt_func = torch.optim.Adam
-    lr = 0.005
+    lr = 0.001
     history = fit(num_epochs, lr, model, train_dl, val_dl, opt_func)
     print(history)
     # predict(model, device)
