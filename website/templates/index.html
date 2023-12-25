@@ -24,6 +24,8 @@
             id="uploaded-image"
             src="{{ url_for('uploaded_file', filename=filename) }}"
             alt="Uploaded Image"
+            width="200"
+            height="200"
         >
         <p id="prediction-text" style="display: none"></p>
         <button id="prediction-button" onclick="makePrediction()">Make Prediction</button>
