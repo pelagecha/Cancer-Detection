@@ -294,6 +294,7 @@ def save(model):
 
 
 if __name__ == '__main__':
+    print("Starting")
     device = get_default_device()
     val_dl = DeviceDataLoader(val_dl, device)
     train_dl = DeviceDataLoader(train_dl, device)
@@ -301,7 +302,7 @@ if __name__ == '__main__':
     print(device)
     # print(evaluate(model, val_dl))
     num_epochs = 1
-    opt_func = torch.optim.Adam
+    opt_func = torch.optim.AdamW
     lr = 0.001
     history = fit(num_epochs, lr, model, train_dl, val_dl, opt_func)
     print(history)
