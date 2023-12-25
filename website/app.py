@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, jsonify
 import os
 
 app = Flask(__name__)
@@ -23,10 +23,7 @@ def predict(model, img):
 '''
 @app.route('/')
 def index():
-    #unpickle model
-    #pred = predict(model, img)
-    pred = "Please insert an image"
-    return render_template('index.html', content=pred)
+    return render_template('index.html', filename=None)
 
 @app.route('/about')
 def about():
@@ -53,6 +50,14 @@ def upload_image():
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config["upload_folder"], filename)
+
+'''---------------Insert all AI code here--------------'''
+@app.route('/prediction')
+def prediction():
+    #depickling (heh), prediction, prediction sanitisation etc.
+    pred = "Insert prediction for image here"
+    return jsonify(pred=pred)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

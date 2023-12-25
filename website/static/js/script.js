@@ -110,6 +110,21 @@ function handleDragLeave(event) {
     event.target.classList.remove('hover');
 }
 
+function makePrediction() {
+    console.log("called function");
+    let butt = document.getElementById("prediction-button");
+    let text = document.getElementById("prediction-text"); 
+    let uploadButton = document.getElementById("new-upload-button");
 
+    butt.style.display = "none";
+    text.style.display = "block";
+    uploadButton.style.display = "block";
+
+    fetch('/prediction')
+        .then(response => response.json())
+        .then(data => {
+            text.innerText = data.pred;
+        })
+}
 
 

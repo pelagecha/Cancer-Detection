@@ -18,35 +18,39 @@
             </div>
         </div>
     </div>
-    <div id="file-accept">
-        <div id="drop-zone-container">
-            <div id="drop-zone"
-                onmouseover="handleHover()"
-                onmouseout="handleOut()"
-                ondragover="handleDragOver(event)"
-                ondragenter="handleDragEnter(event)"
-                ondragleave="handleDragLeave(event)"
-                ondrop="handleDrop(event)"
-                onclick="handleDropZoneClick()"
-            >
-                {% if filename %}
-                    <img
-                        id="uploaded-image"
-                        src="{{ url_for('uploaded_file', filename=filename) }}"
-                        alt="Uploaded Image"
-                    >
-                {% else %}
+    {% if filename %}
+        <h1>File has been successfully uploaded!</h1>
+        <img
+            id="uploaded-image"
+            src="{{ url_for('uploaded_file', filename=filename) }}"
+            alt="Uploaded Image"
+        >
+        <p id="prediction-text" style="display: none"></p>
+        <button id="prediction-button" onclick="makePrediction()">Make Prediction</button>
+        <a id="new-upload-button" style="display: none" href="/">Upload New Image</button>
+    {% else %}
+        <div id="file-accept">
+            <div id="drop-zone-container">
+                <div id="drop-zone"
+                    onmouseover="handleHover()"
+                    onmouseout="handleOut()"
+                    ondragover="handleDragOver(event)"
+                    ondragenter="handleDragEnter(event)"
+                    ondragleave="handleDragLeave(event)"
+                    ondrop="handleDrop(event)"
+                    onclick="handleDropZoneClick()"
+                >
                     <p>Click or Drop your files here</p>
-                {% endif %}
+                </div>
+            </div>
+            <div class="input">
+                <form id="upload-form" method="post" enctype="multipart/form-data">
+                    <input type="file" id="file-upload" name="file" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
+                    <input type="submit" value="Upload">
+                </form>
             </div>
         </div>
-        <div class="input">
-            <form id="upload-form" method="post" enctype="multipart/form-data">
-                <input type="file" id="file-upload" name="file" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
-                <input type="submit" value="Upload">
-            </form>
-        </div>
-    </div>
+    {% endif %}
 </body>
 </html>
 
