@@ -1,24 +1,23 @@
-let isDropped = false;
+// Displays the image once it's selected
+function displayImage(file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.alt = "Dropped Image";
+        img.width = 200;
+        img.height = 200;
+        // Append the image to the drop zone
+        const dropZone = document.getElementById('drop-zone');
+        dropZone.innerHTML = ''; // Clear previous content
+        dropZone.appendChild(img);
 
-function handleHover() {
-    document.getElementById('drop-zone').classList.add('hover');
+        // Add the confirmed class after the image is appended
+        img.classList.add('confirmed');
+    };
+    reader.readAsDataURL(file);
 }
 
-function handleOut() {
-    document.getElementById('drop-zone').classList.remove('hover');
-}
-
-function handleDragOver(event) {
-    event.preventDefault();
-}
-
-function handleDragEnter(event) {
-    event.target.classList.add('hover');
-}
-
-function handleDragLeave(event) {
-    event.target.classList.remove('hover');
-}
 
 function handleDrop(event) {
     event.preventDefault();
@@ -39,29 +38,10 @@ function handleFiles(files) {
     displayImage(file); // Display dropped image
 }
 
-function displayImage(file) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        const img = document.createElement('img');
-        img.src = e.target.result;
-        img.alt = "Dropped Image";
-        img.width = 200;
-        img.height = 200;
 
-        // Append the image to the drop zone
-        const dropZone = document.getElementById('drop-zone');
-        dropZone.innerHTML = ''; // Clear previous content
-        dropZone.appendChild(img);
-
-        // Add the confirmed class after the image is appended
-        img.classList.add('confirmed');
-    };
-    reader.readAsDataURL(file);
-}
 
 
 function handleDropZoneClick() {
-    isDropped = false;
     document.getElementById('file-upload').value = null; // Clear previously selected file
     document.getElementById('file-upload').click();
 }
@@ -69,12 +49,9 @@ function handleDropZoneClick() {
 function handleFileSelect(event) {
     const file = event.target.files[0];
     if (file) {
-        isDropped = false;
         handleFiles([file]);
     }
 }
-
-// document.getElementById('file-upload').addEventListener('change', handleFileSelect);
 
 document.getElementById('upload-form').addEventListener('submit', function (event) {
     event.preventDefault();
@@ -84,44 +61,26 @@ document.getElementById('upload-form').addEventListener('submit', function (even
     }
 });
 
-// function handleUpload() {
-//     const files = document.getElementById('file-upload').files;
-//     if (files.length > 0) {
-//         handleFiles(files);
-//
-//         // Shrinking effect
-//         const dropZoneImage = document.getElementById('drop-zone').querySelector('img');
-//         dropZoneImage.style.width = '290px';
-//         dropZoneImage.style.height = '290px';
-//         dropZoneImage.style.borderRadius = '7px';
-//
-//         setTimeout(() => {
-//             // Gradually filling out the field effect
-//             dropZoneImage.style.width = '300px';
-//             dropZoneImage.style.height = '300px';
-//             dropZoneImage.style.borderRadius = '5px';
-//         }, 100); // Adjust the delay to control the shrinking duration
-//
-//         uploadFiles(files);
-//     }
-// }
 
 
-function uploadFiles(files) {
-    const formData = new FormData();
-    formData.append('file', files[0]);
+function handleHover() {
+    document.getElementById('drop-zone').classList.add('hover');
+}
 
-    fetch('/uploads', {
-        method: 'POST',
-        body: formData
-    })
-        .then(response => {
-            console.log('File uploaded successfully!');
-            // If needed, update the displayed image here after successful upload
-        })
-        .catch(error => {
-            console.error('Error uploading file:', error);
-        });
+function handleOut() {
+    document.getElementById('drop-zone').classList.remove('hover');
+}
+
+function handleDragOver(event) {
+    event.preventDefault();
+}
+
+function handleDragEnter(event) {
+    event.target.classList.add('hover');
+}
+
+function handleDragLeave(event) {
+    event.target.classList.remove('hover');
 }
 
 
