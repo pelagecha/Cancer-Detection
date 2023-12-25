@@ -43,25 +43,25 @@ body {
 .nav-link {
   color: #f2f2f2;
   text-align: center;
-  padding: 14px 16px;
+  padding: 12px 16px;
   text-decoration: none;
   font-size: 17px;
-  /*border-radius: 20px;*/
   background-color: #070f21;
-  transition: background-color 0.4s ease, box-shadow 0.4s ease;
-  box-shadow: 0 0 0 rgba(0, 0, 0, 0); /* Initial shadow */
+  transition: background-color 0.4s ease-in-out, box-shadow 0.4s ease-in-out, border-color 0.4s ease-in-out,
+    font-size 0.5s ease-in-out; /* Include border transition */
+  border: 2px solid transparent; /* Set transparent border initially */
 }
 
 /*Buttons on hover*/
 .nav-link:hover {
-    background: linear-gradient(45deg, #00264d, #001f4d); /* Adjust gradient colors */
+    border: 2px dashed #faebd7;
     box-shadow: 0 0 20px rgba(255, 0, 204, 0.5); /* Adjust shadow intensity */
 }
 
 /*Buttons when pressed*/
 .nav-link:active {
   background-color: #7289da;
-  transform: scale(0.88); /* Slight scale down on click */
+  transform: scale(0.93); /* Slight scale down on click */
 }
 
 /*Cool github links*/
@@ -92,6 +92,9 @@ body {
 
 .github-link {
     color: #5899c3;
+}
+.github-link:hover {
+    color: wheat;
 }
 
 
@@ -124,8 +127,9 @@ body {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: transform 0.3s ease-in-out;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, width 1s ease-in-out, height 1s ease-in-out,
+    background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    box-shadow: 0 6px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Add hover effect on the submit button */
@@ -148,7 +152,8 @@ body {
     text-align: center;
     cursor: pointer;
     font-size: 16px;
-    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out, font-size 0.4s ease-in-out;
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out, font-size 0.4s ease-in-out,
+        width 1s ease-in-out, height 1s ease-in-out,;
     margin: 0 auto; /* Added to horizontally center the element */
     background-color: #6e415d;
     opacity: 1;
@@ -170,6 +175,17 @@ body {
 
 /* Image styles within the drop zone */
 #drop-zone img {
+
+    /* Initial/default styles */
+    width: 300px;
+    height: 300px;
+    border-radius: 5px; /* Update border radius for default image */
+    transition: all 0.6s ease-in-out; /* Applying transition to all properties */
+
+}
+
+/* Styles for the image when it's confirmed */
+#drop-zone img.confirmed {
     width: 325px;
     height: 325px;
     border-radius: 10px;
@@ -180,15 +196,10 @@ body {
     position: relative;
     top: 0;
     left: 0;
-    transition: all 0.6s ease-in-out; /* Applying transition to all properties */
+    /*border: 2px dashed #faebd7;*/
+
 }
 
-/* Styles for the image when it's confirmed */
-#drop-zone img.confirmed {
-    width: 300px;
-    height: 300px;
-    border-radius: 5px; /* Update border radius for confirmed image */
-}
 
 
 

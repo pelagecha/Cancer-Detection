@@ -1,4 +1,16 @@
 // Displays the image once it's selected
+// Displays the image when Upload is pressed
+function displaySelectedImage() {
+    const fileInput = document.getElementById('file-upload');
+    const files = fileInput.files;
+
+    if (files.length > 0) {
+        const file = files[0];
+        displayImage(file); // Display dropped image
+    }
+}
+
+// The modified displayImage function
 function displayImage(file) {
     const reader = new FileReader();
     reader.onload = function (e) {
@@ -12,11 +24,26 @@ function displayImage(file) {
         dropZone.innerHTML = ''; // Clear previous content
         dropZone.appendChild(img);
 
-        // Add the confirmed class after the image is appended
-        img.classList.add('confirmed');
+        // Delay adding the confirmed class to ensure transition
+        setTimeout(function() {
+            img.classList.add('confirmed');
+        }, 50); // Adjust delay as needed
     };
     reader.readAsDataURL(file);
 }
+
+// Function to handle Upload button click
+function handleUploadButtonClick() {
+    displaySelectedImage();
+}
+
+// Event listener for Upload button click
+document.getElementById('upload-button').addEventListener('click', function (event) {
+    event.preventDefault();
+    handleUploadButtonClick();
+});
+
+
 
 
 function handleDrop(event) {
