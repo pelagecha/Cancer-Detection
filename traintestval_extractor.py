@@ -9,9 +9,9 @@ from sklearn.model_selection import train_test_split
 # for folder in folders:
 #     os.makedirs(folder, exist_ok=True)
 
-source_folder = 'dataset'  # Folder containing the files to move
+source_folder = r'/dcs/large/u5534387/images'  # Folder containing the files to move
 # metadata_folder = "Data_E"  # Folder containing the file specification
-metadata_folder = 'metadata.csv'
+metadata_folder = r'/dcs/large/u5534387/metadata.csv'
 
 
 def image_resize(directory, width, height):
@@ -59,6 +59,33 @@ def split_train_val_test(data_folder):
     for file in test_files:
         shutil.move(os.path.join(data_folder, file), os.path.join(test_folder, file))
 
+def move_into_three_folders():
+    train_dir = r"/dcs/large/u5534387/images/training"
+    test_dir = r"/dcs/large/u5534387/images/testing"
+    val_dir = r"/dcs/large/u5534387/images/validation"
+    image_dir = r"/dcs/large/u5534387/images"
+
+    classes = os.listdir(image_dir)
+    for cl in classes:
+        if cl != "testing" and cl != "validation" and cl != "training":
+            files = os.listdir(os.path.join(image_dir, cl))
+            if files != []:
+                train_files, test_files = train_test_split(files, test_size=0.3, random_state=42)
+                val_files, test_files = train_test_split(test_files, test_size=0.33, random_state=42)
+            
+                print("Starting {}".format(cl))
+            #print("{}: {} split into {} training, {} testing, {} validation".format(cl, len(files), len(train_files), len(test_files), len(val_files)))
+                for file in train_files:
+                    shutil.move(os.path.join(image_dir, cl, file), os.path.join(train_dir, cl, file))
+                print("Finished training")
+
+                for file in test_files:
+                    shutil.move(os.path.join(image_dir, cl, file), os.path.join(test_dir, cl, file))
+                print("Finished testing")
+
+                for file in val_files:
+                    shutil.move(os.path.join(image_dir, cl, file), os.path.join(val_dir, cl, file))
+                print("finished validation")
 
 def organize_images_by_lesion_type(base_folder):
     df = pd.read_csv(metadata_folder, usecols=["Image Index", "Finding Labels"])
@@ -71,7 +98,7 @@ def organize_images_by_lesion_type(base_folder):
         lesion_folder = os.path.join(base_folder, lesion_type)
         if not os.path.exists(lesion_folder):
             os.makedirs(lesion_folder)
-
+        
         # Filter images for the current lesion type
         filtered_images = df[df['Finding Labels'].str.contains(lesion_type)]
 
@@ -84,8 +111,10 @@ def organize_images_by_lesion_type(base_folder):
             # Check if the file exists before copying
             if os.path.exists(src_file):
                 shutil.copy(src_file, dst_file)
+                print("copied {}".format(image_filename))
             else:
                 print(f"File '{src_file}' not found.")
+        
 
 
 # Organize images into folders based on lesion types
@@ -110,10 +139,12 @@ def organize_images_by_lesion_type(base_folder):
 
 
 if __name__ == '__main__':
-    image_resize("dataset", 128, 128)
+    # image_resize("dataset", 128, 128)
     # split_train_val_test("dataset")
-    # organize_images_by_lesion_type("dataset/test")
+    #organize_images_by_lesion_type(r"/dcs/large/u5534387/images")
+    move_into_three_folders()
     # organize_images_by_lesion_type("dataset/validate")
     # organize_images_by_lesion_type("dataset/train")
     # binary('binary/train')
     # binary('binary/validate')
+
