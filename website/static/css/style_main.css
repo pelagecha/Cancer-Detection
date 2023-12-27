@@ -118,7 +118,7 @@ body {
 
 
 /*Event on submit*/
-.input input[type="submit"] {
+.green-button {
     display: block;
     margin: 10px auto 0; /* Adding top margin */
     padding: 10px 15px;
@@ -133,7 +133,7 @@ body {
 }
 
 /* Add hover effect on the submit button */
-.input input[type="submit"]:hover {
+.green-button:hover {
     background-color: green;
     box-shadow: 0 0 20px rgba(20, 130, 10, 0.5); /* Adjust shadow intensity */
 }
@@ -185,21 +185,28 @@ body {
 }
 
 /* Styles for the image when it's confirmed */
-#drop-zone img.confirmed {
+/*#drop-zone img.confirmed {*/
+/*    */
+
+/*}*/
+
+/* Styles for the uploaded image */
+#uploaded-image {
+    position: absolute;
     width: 325px;
     height: 325px;
     border-radius: 10px;
     max-width: 110%;
     max-height: 110%;
     object-fit: cover;
-    opacity: 1;
-    position: relative;
-    top: 0;
-    left: 0;
-    /*border: 2px dashed #faebd7;*/
-
+    opacity: 0.4;
+    top: 47%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none; /* Disable pointer events on the image itself */
 }
 
+/* Rest of your existing styles for #drop-zone and image styles within the drop zone */
 
 
 

@@ -1,6 +1,41 @@
 // Displays the image once it's selected
 // Displays the image when Upload is pressed
-function displaySelectedImage() {
+
+// ------------------------------- IMAGE DISPLAYED -------------------------------
+
+// 1. Field gets clicked or dropped
+function handleDropZoneClick() {
+    const fileUpload = document.getElementById('file-upload');
+    fileUpload.value = null; // clear previously selected file
+    fileUpload.click(); // opens file selection dialog
+}
+
+function handleDrop(event) {
+    event.preventDefault();
+    event.target.classList.remove('hover');
+    const files = event.dataTransfer.files;
+    if (files.length > 0) {
+        displayImage(files[0])
+        // Update the file input with the dropped file
+        const fileInput = document.getElementById('file-upload');
+        fileInput.files = files;
+    }
+}
+
+// 2. Display the image
+function handleFiles(files) {
+    const file = files[0];
+    displayImage(file); // Display dropped image
+}
+
+
+
+
+
+
+function displaySelectedImage(event) {
+    event.preventDefault(); // Prevent form submission
+
     const fileInput = document.getElementById('file-upload');
     const files = fileInput.files;
 
@@ -9,6 +44,7 @@ function displaySelectedImage() {
         displayImage(file); // Display dropped image
     }
 }
+
 
 // The modified displayImage function
 function displayImage(file) {
@@ -46,32 +82,12 @@ document.getElementById('upload-button').addEventListener('click', function (eve
 
 
 
-function handleDrop(event) {
-    event.preventDefault();
-    event.target.classList.remove('hover');
-
-    const files = event.dataTransfer.files;
-    if (files.length > 0) {
-        handleFiles(files);
-
-        // Update the file input with the dropped file
-        const fileInput = document.getElementById('file-upload');
-        fileInput.files = files;
-    }
-}
-
-function handleFiles(files) {
-    const file = files[0];
-    displayImage(file); // Display dropped image
-}
 
 
 
 
-function handleDropZoneClick() {
-    document.getElementById('file-upload').value = null; // Clear previously selected file
-    document.getElementById('file-upload').click();
-}
+
+
 
 function handleFileSelect(event) {
     const file = event.target.files[0];
@@ -113,7 +129,7 @@ function handleDragLeave(event) {
 function makePrediction() {
     console.log("called function");
     let butt = document.getElementById("prediction-button");
-    let text = document.getElementById("prediction-text"); 
+    let text = document.getElementById("prediction-text");
     let uploadButton = document.getElementById("new-upload-button");
 
     butt.style.display = "none";
