@@ -146,6 +146,7 @@ body {
     border: 2px dashed #ccc;
     border-radius: 10px;
     position: relative;
+    object-fit: cover;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -179,6 +180,7 @@ body {
     /* Initial/default styles */
     width: 300px;
     height: 300px;
+    object-fit: cover;
     border-radius: 5px; /* Update border radius for default image */
     transition: all 0.6s ease-in-out; /* Applying transition to all properties */
 

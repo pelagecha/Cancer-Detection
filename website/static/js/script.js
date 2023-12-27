@@ -29,66 +29,6 @@ function handleFiles(files) {
 }
 
 
-
-
-
-
-function displaySelectedImage(event) {
-    event.preventDefault(); // Prevent form submission
-
-    const fileInput = document.getElementById('file-upload');
-    const files = fileInput.files;
-
-    if (files.length > 0) {
-        const file = files[0];
-        displayImage(file); // Display dropped image
-    }
-}
-
-
-// The modified displayImage function
-function displayImage(file) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        const img = document.createElement('img');
-        img.src = e.target.result;
-        img.alt = "Dropped Image";
-        img.width = 200;
-        img.height = 200;
-        // Append the image to the drop zone
-        const dropZone = document.getElementById('drop-zone');
-        dropZone.innerHTML = ''; // Clear previous content
-        dropZone.appendChild(img);
-
-        // Delay adding the confirmed class to ensure transition
-        setTimeout(function() {
-            img.classList.add('confirmed');
-        }, 50); // Adjust delay as needed
-    };
-    reader.readAsDataURL(file);
-}
-
-// Function to handle Upload button click
-function handleUploadButtonClick() {
-    displaySelectedImage();
-}
-
-// Event listener for Upload button click
-document.getElementById('upload-button').addEventListener('click', function (event) {
-    event.preventDefault();
-    handleUploadButtonClick();
-});
-
-
-
-
-
-
-
-
-
-
-
 function handleFileSelect(event) {
     const file = event.target.files[0];
     if (file) {
@@ -103,6 +43,59 @@ document.getElementById('upload-form').addEventListener('submit', function (even
         handleFiles(files);
     }
 });
+
+
+
+
+// Function to handle Upload button click
+
+
+// ----------------------------------- UPLOAD BUTTON ---------------------------------------------
+document.getElementById('upload-form').addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent default form submission behavior
+    // Display the selected image when the form is submitted
+    displaySelectedImage();
+});
+
+function displaySelectedImage() {
+    const fileInput = document.getElementById('file-upload');
+    const files = fileInput.files;
+    if (files.length > 0) {
+        const file = files[0];
+        // Display the image using FileReader
+        displayImage(file);
+    }
+}
+
+// The modified displayImage function
+function displayImage(file) {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.alt = "Dropped Image";
+
+        const dropZone = document.getElementById('drop-zone');
+
+        // Clear previous content inside the drop zone
+        dropZone.innerHTML = '';
+
+        // Append the image to the drop zone
+        dropZone.appendChild(img);
+
+        // Delay adding the confirmed class to ensure transition
+        setTimeout(function() {
+            img.classList.add('confirmed');
+        }, 50); // Adjust delay as needed
+    };
+
+    reader.readAsDataURL(file);
+}
+
+
+
+
 
 
 
