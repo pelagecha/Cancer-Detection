@@ -137,3 +137,10 @@ function makePrediction() {
 }
 
 
+const uploadedImage = document.getElementById('uploaded-image');
+
+function toggleSize() {
+    uploadedImage.classList.toggle('default-size');
+    uploadedImage.classList.toggle('enlarged-size');
+}
+

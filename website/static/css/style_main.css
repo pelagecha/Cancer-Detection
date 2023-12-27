@@ -186,13 +186,6 @@ body {
 
 }
 
-/* Styles for the image when it's confirmed */
-/*#drop-zone img.confirmed {*/
-/*    */
-
-/*}*/
-
-/* Styles for the uploaded image */
 #uploaded-image {
     position: absolute;
     width: 325px;
@@ -201,14 +194,30 @@ body {
     max-width: 110%;
     max-height: 110%;
     object-fit: cover;
-    opacity: 0.4;
-    top: 47%;
+    /*opacity: 0.4;*/
+    top: 42%;
     left: 50%;
     transform: translate(-50%, -50%);
     pointer-events: none; /* Disable pointer events on the image itself */
+    transition: width 0.5s ease; /* Add transition effect */
 }
 
-/* Rest of your existing styles for #drop-zone and image styles within the drop zone */
 
+.default-size {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 5px;
+    transition: all 0.6s ease-in-out;
+}
+
+.enlarged-size {
+    width: 325px;
+    height: 325px;
+    border-radius: 10px;
+    max-width: 110%;
+    max-height: 110%;
+    transition: width 0.5s ease;
+}
 
 
