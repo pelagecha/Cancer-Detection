@@ -1,34 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Hell Yeah</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style_about.css') }}">
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-
-</head>
-<body id="about-body">
-    <div class="header">
-        <div class="topnav">
-            <a class="nav-link" href="/">Home</a>
-            <a class="nav-link" href="news">News</a>
-            <a class="nav-link" href="contact">Contact</a>
-            <a class="nav-link" href="about">About</a>
-            <div class="creator-info">
-                <h3>Created by <a class="github-link" target=”_blank” href="https://github.com/jslapek">Jakub</a> and <a class="github-link" target=”_blank” href="https://github.com/pelagecha">Nikita</a></h3>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Hell Yeah</title>
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename= 'css/style_about.css') }}"
+        />
+        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    </head>
+    <body id="about-body">
+        <div class="header">
+            <div class="topnav">
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link" href="news">News</a>
+                <a class="nav-link" href="contact">Contact</a>
+                <a class="nav-link" href="about">About</a>
+                <div class="creator-info">
+                    <h3>
+                        Created by
+                        <a
+                            class="github-link"
+                            target="”_blank”"
+                            href="https://github.com/jslapek"
+                            >Jakub</a
+                        >
+                        and
+                        <a
+                            class="github-link"
+                            target="”_blank”"
+                            href="https://github.com/pelagecha"
+                            >Nikita</a
+                        >
+                    </h3>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="about-section">
-      <h2 class="about-heading">About</h2>
-      <hr class="horizontal-line">
-      <p class="about-text">Hello there, our names are Nikita and Jakub, and we're first year Computer Science students at the University of Warwick. This projects aims to use a custom Convolutional Neural Network to detect various types of cancer from the input picture. The model used was trained on the university servers (thanks DCS), and ... </p>
-    </div>
-</body>
+        <div class="about-section">
+            <h2 class="about-heading">About</h2>
+            <hr class="horizontal-line" />
+            <p class="about-text">
+                Hello there, our names are Nikita and Jakub, and we're first
+                year Computer Science students at the University of Warwick.
+                This projects aims to use a custom Convolutional Neural Network
+                to detect various types of cancer from the input picture. The
+                model used was trained on the university servers (thanks DCS),
+                and ...
+            </p>
+        </div>
+    </body>
 </html>
-
-
-
-

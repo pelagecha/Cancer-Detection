@@ -1,59 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Hell Yeah</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style_main.css') }}">
-    <script src="{{ url_for('static', filename= 'js/script.js') }}"></script>
-</head>
-<body id="main-body">
-    <div class="header">
-        <div class="topnav">
-            <a class="nav-link" href="/">Home</a>
-            <a class="nav-link" href="news">News</a>
-            <a class="nav-link" href="contact">Contact</a>
-            <a class="nav-link" href="about">About</a>
-            <div class="creator-info">
-                <h3>Created by <a class="github-link" target=”_blank” href="https://github.com/jslapek">Jakub</a> and <a class="github-link" target=”_blank” href="https://github.com/pelagecha">Nikita</a></h3>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Hell Yeah</title>
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename= 'css/style_main.css') }}"
+        />
+        <script src="{{ url_for('static', filename= 'js/script.js') }}"></script>
+    </head>
+    <body id="main-body">
+        <div class="header">
+            <div class="topnav">
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link" href="news">News</a>
+                <a class="nav-link" href="contact">Contact</a>
+                <a class="nav-link" href="about">About</a>
+                <div class="creator-info">
+                    <h3>
+                        Created by
+                        <a
+                            class="github-link"
+                            target="”_blank”"
+                            href="https://github.com/jslapek"
+                            >Jakub</a
+                        >
+                        and
+                        <a
+                            class="github-link"
+                            target="”_blank”"
+                            href="https://github.com/pelagecha"
+                            >Nikita</a
+                        >
+                    </h3>
+                </div>
             </div>
         </div>
-    </div>
-    <div id="file-accept">
-        <div id="drop-zone-container">
-            <div id="drop-zone"
-                onmouseover="handleHover()"
-                onmouseout="handleOut()"
-                ondragover="handleDragOver(event)"
-                ondragenter="handleDragEnter(event)"
-                ondragleave="handleDragLeave(event)"
-                ondrop="handleDrop(event)"
-                onclick="handleDropZoneClick()"
-            >
-                <p>Click or Drop your files here</p>
+        <div id="file-accept">
+            <div id="drop-zone-container">
+                <div
+                    id="drop-zone"
+                    onmouseover="handleHover()"
+                    onmouseout="handleOut()"
+                    ondragover="handleDragOver(event)"
+                    ondragenter="handleDragEnter(event)"
+                    ondragleave="handleDragLeave(event)"
+                    ondrop="handleDrop(event)"
+                    onclick="handleDropZoneClick()"
+                >
+                    <p>Click or Drop your files here</p>
+                </div>
             </div>
-        </div>
-        {% if filename %}
-            <img id="uploaded-image" src="{{ url_for('uploaded_file', filename=filename) }}">
+            {% if filename %}
+            <img
+                id="uploaded-image"
+                src="{{ url_for('uploaded_file', filename=filename) }}"
+            />
             <div class="input">
-                <button class="green-button" id="prediction-button" onclick="makePrediction()">Make Prediction</button>
-                <a id="new-upload-button" style="display: none" href="/">Upload New Image</a>
+                <button
+                    class="green-button"
+                    id="prediction-button"
+                    onclick="makePrediction()"
+                >
+                    Make Prediction
+                </button>
+                <a id="new-upload-button" style="display: none" href="/"
+                    >Upload New Image</a
+                >
                 <p id="prediction-text" style="display: none"></p>
             </div>
-        {% else %}
+            {% else %}
             <div class="input">
-                <form id="upload-form" method="post" enctype="multipart/form-data">
-<!--                    drag and drop box-->
-                    <input type="file" id="file-upload" name="file" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
-<!--                    upload button -->
-                    <input class="green-button" type="submit" value="Upload">
+                <form
+                    id="upload-form"
+                    method="post"
+                    enctype="multipart/form-data"
+                >
+                    <!--                    drag and drop box-->
+                    <input
+                        type="file"
+                        id="file-upload"
+                        name="file"
+                        accept="image/*"
+                        style="display: none"
+                        onchange="handleFileSelect(event)"
+                    />
+                    <!--                    upload button -->
+                    <input class="green-button" type="submit" value="Upload" />
                 </form>
             </div>
-        {% endif %}
-    </div>
-
-</body>
+            {% endif %}
+        </div>
+    </body>
 </html>
-
-
-
-

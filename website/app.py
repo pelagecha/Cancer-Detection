@@ -21,6 +21,7 @@ def predict(model, img):
     else:
         return "The model is {.2f}% sure that the image is cancerous, with a {.2f}% surety of {}".format(1-NoFinding, pred[0], class_names[class_index])
 '''
+
 @app.route('/')
 def index():
     return render_template('index.html', filename=None)
