@@ -15,7 +15,7 @@ data_dir = "cifar10"
 # torch.set_num_threads(4)
 
 
-# README available at: https://nihcc.app.box.com/v/DeepLesion/file/306056134060
+# paper at https://nihcc.app.box.com/v/DeepLesion/file/306056134060
 # labeled data at: https://nihcc.app.box.com/v/ChestXray-NIHCC
 # load images as torch tensors from a folder for training
 # each tensor is shaped 3xWIDTHxHEIGHT (3 for RGB) |img, label = dataset[0] print(img.shape, label)|
