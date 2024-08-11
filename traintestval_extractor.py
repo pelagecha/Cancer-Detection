@@ -146,5 +146,5 @@ if __name__ == '__main__':
     # organize_images_by_lesion_type("dataset/validate")
     # organize_images_by_lesion_type("dataset/train")
     # binary('binary/train')
-    # binary('binary/validate')
+    # binary('binary/validate') .
 
